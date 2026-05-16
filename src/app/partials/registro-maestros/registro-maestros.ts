@@ -2,19 +2,21 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { MaestrosService } from '../../servicies/maestros-service';
-import { NotificationService } from '../../servicies/tools/notification-service';
+import { NgxMaskDirective } from 'ngx-mask';
+import { MaestrosService } from '../../services/maestros-service';
+import { NotificationService } from '../../services/tools/notification-service';
 
 
 @Component({
-  selector: 'app-regristro-maestros',
+  selector: 'app-registro-maestros',
   imports: [
-    ...SHARED_IMPORTS
+    ...SHARED_IMPORTS,
+    NgxMaskDirective
   ],
-  templateUrl: './regristro-maestros.html',
-  styleUrl: './regristro-maestros.scss',
+  templateUrl: './registro-maestros.html',
+  styleUrl: './registro-maestros.scss',
 })
-export class RegristroMaestros implements OnInit {
+export class RegistroMaestros implements OnInit {
 
   @Input() rol:string = "";
   @Input() datos_user:any = {};
@@ -60,6 +62,8 @@ export class RegristroMaestros implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.maestro = this.maestrosService.esquemaMaestro();
+    this.maestro.rol = this.rol;
   }
 
   //Funciones para password
@@ -91,11 +95,42 @@ export class RegristroMaestros implements OnInit {
     this.location.back();
   }
 
+  private normalizeFechaNacimiento(): void {
+    const rawFecha = this.maestro?.fecha_nacimiento;
+
+    if (typeof rawFecha !== 'string') {
+      return;
+    }
+
+    const fecha = rawFecha.trim();
+    const parts = fecha.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+    if (!parts) {
+      return;
+    }
+
+    const day = parts[1].padStart(2, '0');
+    const month = parts[2].padStart(2, '0');
+    const year = parts[3];
+    this.maestro.fecha_nacimiento = `${year}-${month}-${day}`;
+  }
+
+  private normalizeTelefono(): void {
+    if (typeof this.maestro?.telefono !== 'string') {
+      return;
+    }
+
+    this.maestro.telefono = this.maestro.telefono.replace(/\D/g, '');
+  }
+
 public registrar(){
 
     // Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
     this.errors = {};
     console.log("Datos del maestro: ", this.maestro);
+
+    this.normalizeFechaNacimiento();
+    this.normalizeTelefono();
 
     // Validar datos y mostrar errores
     this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
@@ -107,6 +142,17 @@ public registrar(){
     // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
     if(this.maestro.password === this.maestro.confirmar_password){
       // TODO: Aquí iría la lógica para registrar al maestro, como llamar a un servicio que se encargue de hacer la petición al backend
+      this.maestrosService.registrarMaestro(this.maestro).subscribe({
+        next: (response) => {
+          this.notificationService.success("Maestro registrado exitosamente");
+          console.log(response);
+          this.router.navigate(['']);
+        },
+        error: (error) => {
+          console.error("Error al registrar maestro: ", error);
+          this.notificationService.error("Error al registrar maestro");
+        }
+      });
     }else{
       this.notificationService.error("Las contraseñas no coinciden");
       this.maestro.password="";

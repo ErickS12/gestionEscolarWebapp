@@ -1,7 +1,7 @@
 <!-- Formulario de registro para administradores -->
 <div class="wrapper">
   <div class="section-registro">
-    <div class="body-registro">
+    <form class="body-registro" (ngSubmit)="!editar ? registrar() : actualizar()" novalidate>
       <div class="row mt-3 mb-3">
         <div class="form-group col-12">
           <label class="title-user" for="tipo_usuario">Ingresa los datos del administrador</label>
@@ -93,13 +93,13 @@
 
       <!-- En esta clase se definen los botones para guardar o actualizar el registro -->
       <div class="section-buttons">
-        <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
+        <button class="btn btn-danger" type="button" (click)="regresar()">Cancelar</button>
         @if(!editar){
-          <button class="btn btn-primary" type="submit" (click)="registrar()">Registrar</button>
+          <button class="btn btn-primary" type="submit">Registrar</button>
         }@else{
-          <button class="btn btn-primary" type="submit" (click)="actualizar()">Actualizar</button>
+          <button class="btn btn-primary" type="submit">Actualizar</button>
         }
       </div>
-    </div>
+    </form>
   </div>
 </div>

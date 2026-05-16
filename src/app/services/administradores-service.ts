@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ErrorsService } from './tools/erros-service';
+import { ErrorsService } from './tools/errors-service';
 import { ValidatorService } from './tools/validator-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthServices } from './auth-services';
@@ -90,12 +90,14 @@ export class AdministradoresService {
       error["edad"] = this.errorService.required;
     }else if(!this.validatorService.numeric(data["edad"])){
       error["edad"] = this.errorService.numeric;
-    }else if(data["edad"]<18){
+    }else if(Number(data["edad"])<18){
       error["edad"] = "La edad debe ser mayor o igual a 18";
     }
 
     if(!this.validatorService.required(data["telefono"])){
       error["telefono"] = this.errorService.required;
+    } else if (!this.validatorService.phoneMX(data["telefono"])) {
+      error["telefono"] = 'Teléfono inválido. Debe contener 10 dígitos.';
     }
 
     if(!this.validatorService.required(data["ocupacion"])){

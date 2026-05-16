@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { ErrorsService } from './tools/errors-service';
+import { ValidatorService } from './tools/validator-service';
 
 //Estas son variables para las cookies
 const session_cookie_name = 'gestion-escolar-token';
@@ -23,9 +25,48 @@ export class AuthServices {
     private http: HttpClient,
     private router: Router,
     private cookieService: CookieService,
-    //private validatorService: ValidatorService,
-    //private errorService: ErrorsService,
+    private validatorService: ValidatorService,
+    private errorService: ErrorsService,
   ) {}
+
+  // Función para validar el login
+  public validarLogin(username: string, password: string){
+    const data:any = {
+      "username": username,
+      "password": password
+    };
+    const error: any = {};
+
+    console.log("Validando el login: ", data);
+
+
+    if(!this.validatorService.required(data["username"])){
+      error["username"] = this.errorService.required;
+    }else if(!this.validatorService.maxLen(data["username"], 40)){
+      error["username"] = this.errorService.max;
+    }else if (!this.validatorService.email(data['username'])) {
+      error['username'] = this.errorService.email;
+    }
+
+    if(!this.validatorService.required(data["password"])){
+      error["password"] = this.errorService.required;
+    }
+
+    return error;
+
+  }
+
+  //Creamos el post para el login
+  public login(username: string, password: string): Observable<any> {
+    const data = {
+      "username": username,
+      "password": password
+    };
+
+    const headers = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
+
+    return this.http.post<any>(`${environment.url_api}/login/`, data, headers);
+  }
 
   //Cerrar sesión
   public logout(): Observable<any> {

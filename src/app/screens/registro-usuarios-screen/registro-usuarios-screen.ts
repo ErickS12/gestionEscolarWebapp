@@ -2,19 +2,19 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { Location } from '@angular/common';
 import { MatRadioChange } from '@angular/material/radio';
-import { AuthServices } from '../../servicies/auth-services';
-import { RegristroAlumnos } from '../../partials/regristro-alumnos/regristro-alumnos';
-import { RegristroAdmin } from '../../partials/regristro-admin/regristro-admin';
-import { RegristroMaestros } from '../../partials/regristro-maestros/regristro-maestros';
+import { AuthServices } from '../../services/auth-services';
+import { RegistroAlumnos } from '../../partials/registro-alumnos/registro-alumnos';
+import { RegistroAdmin } from '../../partials/registro-admin/registro-admin';
+import { RegistroMaestros } from '../../partials/registro-maestros/registro-maestros';
 
 
 @Component({
   selector: 'app-registro-usuarios-screen',
   imports: [
     ...SHARED_IMPORTS,
-    RegristroAdmin,
-    RegristroAlumnos,
-    RegristroMaestros,
+    RegistroAdmin,
+    RegistroAlumnos,
+    RegistroMaestros,
 ],
   templateUrl: './registro-usuarios-screen.html',
   styleUrl: './registro-usuarios-screen.scss',

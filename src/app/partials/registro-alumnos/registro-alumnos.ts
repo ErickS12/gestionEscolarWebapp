@@ -1,17 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { NgxMaskDirective } from 'ngx-mask';
+import { AlumnoService } from '../../services/alumno-service';
+import { NotificationService } from '../../services/tools/notification-service';
 
 @Component({
-  selector: 'app-regristro-alumnos',
+  selector: 'app-registro-alumnos',
   imports: [
-    ...SHARED_IMPORTS
+    ...SHARED_IMPORTS,
+    NgxMaskDirective
   ],
-  templateUrl: './regristro-alumnos.html',
-  styleUrl: './regristro-alumnos.scss',
+  templateUrl: './registro-alumnos.html',
+  styleUrl: './registro-alumnos.scss',
 })
-export class RegristroAlumnos {
+export class RegistroAlumnos implements OnInit {
   @Input() rol:string = "";
   @Input() datos_user:any = {};
 
@@ -51,8 +55,15 @@ public posgrado: any[] = [
 
 constructor(
     private location: Location,
-    private router: Router
+    private router: Router,
+    private alumnoService: AlumnoService,
+    private notificationService: NotificationService
   ) { }
+
+  ngOnInit(): void {
+    this.alumno = this.alumnoService.esquemaAlumno();
+    this.alumno.rol = this.rol;
+  }
 
 
 
@@ -104,7 +115,60 @@ constructor(
     this.location.back();
   }
 
+  private normalizeFechaNacimiento(): void {
+    const rawFecha = this.alumno?.fecha_nacimiento;
+
+    if (typeof rawFecha !== 'string') {
+      return;
+    }
+
+    const fecha = rawFecha.trim();
+    const parts = fecha.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+    if (!parts) {
+      return;
+    }
+
+    const day = parts[1].padStart(2, '0');
+    const month = parts[2].padStart(2, '0');
+    const year = parts[3];
+    this.alumno.fecha_nacimiento = `${year}-${month}-${day}`;
+  }
+
   public registrar(){
+    //Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo alumno
+    this.errors = {};
+    console.log("Datos del alumno: ", this.alumno);
+
+    this.normalizeFechaNacimiento();
+
+    // Validar datos y mostrar errores
+    this.errors = this.alumnoService.validarAlumno(this.alumno, this.editar);
+    //Verificamos si el objeto de errores está vacío, lo que indica que no hay errores de validación
+    if(Object.keys(this.errors).length > 0){
+      return;
+    }
+
+    // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
+    if(this.alumno.password === this.alumno.confirmar_password){
+      // TODO: Aquí iría la lógica para registrar al alumno, como llamar a un servicio que se encargue de hacer la petición al backend
+      this.alumnoService.registrarAlumno(this.alumno).subscribe({
+        next: (response) => {
+          this.notificationService.success("Alumno registrado exitosamente");
+          console.log(response);
+          //Si se registra correctamente, redirigimos al login
+          this.router.navigate(['']);
+        },
+        error: (error) => {
+          console.error("Error al registrar alumno: ", error);
+          this.notificationService.error("Error al registrar alumno");
+        }
+      });
+    }else{
+      this.notificationService.error("Las contraseñas no coinciden");
+      this.alumno.password="";
+      this.alumno.confirmar_password="";
+    }
 
   }
 

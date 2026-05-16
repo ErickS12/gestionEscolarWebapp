@@ -59,15 +59,15 @@
     <div class="forms-area">
       <!-- Formularios (vistas) de cada usuario (inyección dinámica) -->
       @if (isAdmin) {
-      <app-regristro-admin [rol]="tipo_user" [datos_user]="user"></app-regristro-admin>
+      <app-registro-admin [rol]="tipo_user" [datos_user]="user"></app-registro-admin>
       }
 
       @if (isAlumno) {
-      <app-regristro-alumnos [rol]="tipo_user" [datos_user]="editar ? user : null"></app-regristro-alumnos>
+      <app-registro-alumnos [rol]="tipo_user" [datos_user]="editar ? user : null"></app-registro-alumnos>
       }
 
       @if (isMaestro) {
-      <app-regristro-maestros [rol]="tipo_user" [datos_user]="editar ? user : null"></app-regristro-maestros>
+      <app-registro-maestros [rol]="tipo_user" [datos_user]="editar ? user : null"></app-registro-maestros>
       }
     </div>
   </div>

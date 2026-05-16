@@ -3,20 +3,20 @@ import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { NgxMaskDirective } from "ngx-mask";
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AdministradoresService } from '../../servicies/administradores-service'; //importamos coasa 
-import { NotificationService } from '../../servicies/tools/notification-service';
+import { AdministradoresService } from '../../services/administradores-service'; //importamos el servicio de administradores para usar sus métodos de validación y registro 
+import { NotificationService } from '../../services/tools/notification-service';
 
 
 @Component({
-  selector: 'app-regristro-admin',
+  selector: 'app-registro-admin',
   imports: [
     ...SHARED_IMPORTS,
     NgxMaskDirective
 ],
-  templateUrl: './regristro-admin.html',
-  styleUrl: './regristro-admin.scss',
+  templateUrl: './registro-admin.html',
+  styleUrl: './registro-admin.scss',
 })
-export class RegristroAdmin implements OnInit {
+export class RegistroAdmin implements OnInit {
 
   @Input() rol:string = "";
   @Input() datos_user:any = {};
@@ -82,7 +82,7 @@ export class RegristroAdmin implements OnInit {
 
 
   public registrar(){
-    // Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
+    //Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
     this.errors = {};
     console.log("Datos del admin: ", this.admin);
 

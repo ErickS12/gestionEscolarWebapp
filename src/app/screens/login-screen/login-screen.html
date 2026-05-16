@@ -15,8 +15,8 @@
           <label for="email">Correo electrónico</label>
           <input type="email" [(ngModel)]="username" name="username" class="form-control" id="email"
             placeholder="nombre@correo.com" autocomplete="username" />
-          @if (error.username) {
-            <div class="invalid-feedback">{{ error.username }}</div>
+          @if (errors.username) {
+            <div class="invalid-feedback">{{ errors.username }}</div>
           }
         </div>
         <!-- Campo para la contraseña -->
@@ -31,8 +31,8 @@
               <i [ngClass]="hide ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'"></i>
             </span>
           </div>
-          @if (error.password) {
-            <div class="invalid-feedback">{{ error.password }}</div>
+          @if (errors.password) {
+            <div class="invalid-feedback">{{ errors.password }}</div>
           }
         </div>
         <!-- Se agrega el label de olvidé mi contraseña -->

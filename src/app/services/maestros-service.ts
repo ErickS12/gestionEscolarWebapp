@@ -1,15 +1,29 @@
 import { Injectable } from '@angular/core';
-import { ErrorsService } from './tools/erros-service';
+import { ErrorsService } from './tools/errors-service';
 import { ValidatorService } from './tools/validator-service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { AuthServices } from './auth-services';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MaestrosService {
 
+
+  /** Genera los HttpHeaders con el token de sesión si existe */
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authServices.getSessionToken();
+    return token
+      ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` })
+      : new HttpHeaders({ 'Content-Type': 'application/json' });
+  }
+
   constructor(
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
+    private http: HttpClient,  // para manejar las peticiones http 
+    private authServices: AuthServices
   ) {}
 
   public esquemaMaestro(){
@@ -26,7 +40,7 @@ export class MaestrosService {
       'rfc': '',
       'cubiculo': '',
       'area_investigacion': '',
-      'materias_array': []
+      'materias_json': []
     }
 
   }
@@ -79,6 +93,8 @@ export class MaestrosService {
 
     if(!this.validatorService.required(data["telefono"])){
       error["telefono"] = this.errorService.required;
+    } else if (!this.validatorService.phoneMX(data["telefono"])) {
+      error["telefono"] = 'Teléfono inválido. Debe contener 10 dígitos.';
     }
 
     if(!this.validatorService.required(data["cubiculo"])){
@@ -89,10 +105,22 @@ export class MaestrosService {
       error["area_investigacion"] = this.errorService.required;
     }
 
-    if(!this.validatorService.required(data["materias_array"])){
-      error["materias_array"] = "Debes seleccionar materias para poder registrarte";
+    if(!this.validatorService.required(data["materias_json"])){
+      error["materias_json"] = "Debes seleccionar materias para poder registrarte";
+    }
+
+    if(!this.validatorService.required(data["fecha_nacimiento"])){
+      error["fecha_nacimiento"] = this.errorService.required;
+    } else if (!this.validatorService.dateISO(data["fecha_nacimiento"])) {
+      error["fecha_nacimiento"] = this.errorService.betweenDate;
     }
 
     return error;
   }
+
+
+  //Creamos la petición POST para registrar al maestro, esta función se llamará en el método registrar() del componente registro-maestro.ts
+  public registrarMaestro(data: any) {
+      return this.http.post<any>(`${environment.url_api}/maestros/`, data, { headers: this.getAuthHeaders() });
+    }
 }
