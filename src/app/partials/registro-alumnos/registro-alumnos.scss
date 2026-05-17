@@ -1,8 +1,3 @@
-/* =========================
-   Estilos para el alumno-screen
-   ========================= */
-
-/* Wrapper principal con fondo */
 .wrapper {
   width: 100%;
   min-height: 100vh;
@@ -13,8 +8,7 @@
   background-color: #fff;
 }
 
-/* Sección de registro */
-.section-registro {
+.section-registro{
   width: 90%;
   height: 100%;
   display: flex;
@@ -23,7 +17,6 @@
   align-items: center;
 }
 
-/* Cuerpo del formulario de registro */
 .body-registro {
   width: 100%;
   display: flex;
@@ -35,8 +28,7 @@
   background: #fff;
 }
 
-/* Títulos */
-.title-user {
+.title-user{
   font-size: 28px;
   text-align: left;
   font-family: Nexa-Bold;
@@ -44,74 +36,17 @@
   color: #231F20;
   text-transform: capitalize;
   opacity: 1;
-  white-space: nowrap;
 }
 
-/* Estilo de los campos de formulario */
-mat-form-field {
-  width: 90% !important;
+mat-form-field{
+  width: 90%!important;
   margin-left: 5%;
-  height: 48px !important;
-  text-align: left !important;
+  height: 48px!important;
+  text-align: left!important;
 }
 
-::ng-deep .mat-mdc-form-field-infix {
-  margin-left: 10px !important;
-}
-
-/* =========================
-   Ícono del ojo (contraseña)
-   ========================= */
-.eye-icon {
-  cursor: pointer;
-  color: #231F20;
-  opacity: 0.6;
-
-  &:hover {
-    opacity: 1;
-    color: #0092B8;
-  }
-}
-
-/* =========================
-   Mensajes de error
-   ========================= */
-.invalid-feedback {
-  width: 90%;
-  margin-left: 5%;
-  color: #e53935;
-  font-size: 12px;
-  font-family: Nexa;
-  margin-top: -1.8rem;
-  margin-bottom: 0.5rem;
-  display: block;
-}
-
-/* =========================
-   Sección de posgrado condicional
-   ========================= */
-.section-posgrado {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* =========================
-   Sección de botones
-   ========================= */
-.section-buttons {
+//Para la sección de botones
+.section-buttons{
   width: 90%;
   margin-left: 5%;
   display: flex;
@@ -121,13 +56,14 @@ mat-form-field {
   padding-bottom: 3rem;
 }
 
-/* Botón primario */
 .btn-primary {
   width: 208px;
   height: 48px;
-  background-color: #0092B8 !important;
-  border-color: #0092B8 !important;
-  border-radius: 8px !important;
+  background-color: #0092B8!important;
+  border-color: #0092B8!important;
+  border-radius: 8px!important;
+  opacity: 1;
+  //Fuente
   text-align: center;
   font-family: Nexa-Bold;
   font-size: 16px;
@@ -135,18 +71,20 @@ mat-form-field {
   letter-spacing: 0px;
   color: #FFFFFF;
   opacity: 1;
-
-  &:hover {
-    background-color: #017895 !important;
-    border-color: #017895 !important;
-  }
 }
 
-/* Botón de eliminación */
-.btn-danger {
+.btn-primary:hover {
+  background-color: #017895!important;
+  border-color: #017895!important;
+
+}
+
+.btn-danger{
   width: 208px;
   height: 48px;
-  border-radius: 8px !important;
+  border-radius: 8px!important;
+  opacity: 1;
+  //Fuente
   text-align: center;
   font-family: Nexa-Bold;
   font-size: 16px;
@@ -156,138 +94,66 @@ mat-form-field {
   opacity: 1;
 }
 
-/* =========================
-   Checkbox MDC
-   ========================= */
-::ng-deep .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background,
-::ng-deep .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__ripple {
-  background-color: #0092B8 !important;
-  border-color: #0092B8 !important;
-}
-
-::ng-deep .mat-mdc-checkbox:focus .mdc-checkbox__background {
-  border-color: #1565C0 !important;
-}
-
-::ng-deep .mat-mdc-checkbox .mdc-checkbox__ripple {
-  transform: scale(1.2);
-}
-
-::ng-deep .mat-mdc-checkbox .mdc-checkbox__checkmark {
-  transform: scale(1.3);
-  stroke-width: 3px;
-}
-
-::ng-deep .mat-mdc-checkbox:hover .mdc-checkbox__background {
-  background-color: rgba(0, 146, 184, 0.1);
-}
-
-.d-checkbox-nombre {
-  margin-top: 0.4rem;
-  font-size: 1rem;
-  color: #231F20;
-  font-weight: 500;
-  transition: color 0.3s ease;
+.mat-hint-margin {
+  margin-bottom: 1rem;
 }
 
 /* =========================
-   Responsive — Tablet (≤ 900px)
+   Ajustes para el formulario en dispositivos móviles
    ========================= */
-@media (max-width: 900px) {
-  .title-user {
-    font-size: 22px;
-    white-space: normal;
-  }
 
-  mat-form-field {
-    width: 95% !important;
-    margin-left: 2.5%;
-  }
-
-  .invalid-feedback {
-    width: 95%;
-    margin-left: 2.5%;
-  }
-
-  .section-buttons {
-    width: 95%;
-    margin-left: 2.5%;
-  }
-}
-
-/* =========================
-   Responsive — Móvil (≤ 700px)
-   ========================= */
+/* Título del formulario (en móvil) */
 @media (max-width: 700px) {
   .title-user {
-    font-size: clamp(1.2rem, 1rem + 2vw, 1.8rem);
-    line-height: 1.3;
-    text-align: center;
-    white-space: normal;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); /* Asegura que el tamaño sea adecuado */
+    line-height: 1.2;
     margin-bottom: 0.5rem;
+    text-align: center; /* Centrado en dispositivos móviles */
+    white-space: normal; /* Evita que el texto se divida o se sobreponga */
   }
 
-  .body-registro {
-    padding-top: 1.5rem;
-    gap: 1.5rem;
+  .title-materias {
+    font-size: 1.2rem; /* Asegura que el tamaño sea adecuado en dispositivos pequeños */
+    text-align: left;
+    margin-bottom: 1rem;
+  }
+
+  .select-materias {
+    width: 100%;
+    gap: 0.5rem;
+    padding-left: 1.5rem;
   }
 
   mat-form-field {
-    width: 100% !important;
-    margin-left: 0 !important;
+    width: 100% !important; /* Hace que el formulario ocupe todo el ancho */
+    margin-left: 0; /* Elimina el margen de la izquierda en móviles */
   }
 
-  ::ng-deep .mat-mdc-form-field-infix {
-    margin-left: 6px !important;
-  }
-
-  .invalid-feedback {
-    width: 100%;
-    margin-left: 0;
-    margin-top: -1.2rem;
-  }
-
-  .section-posgrado {
-    width: 100%;
-  }
-
-  .section-buttons {
-    width: 100%;
-    margin-left: 0;
-    flex-direction: column;
-    gap: 1rem;
-    padding-bottom: 2rem;
-  }
-
-  .btn-primary,
-  .btn-danger {
-    width: 100%;
-    font-size: 14px;
+  /* Ajuste para los botones */
+  .btn-primary, .btn-danger {
+    width: 100%; /* Ancho completo para los botones en móviles */
+    font-size: 14px; /* Reducción de tamaño en botones */
     height: 48px;
   }
 
-  .d-checkbox-nombre {
-    font-size: 0.9rem;
+  .section-buttons {
+    flex-direction: column; /* Coloca los botones en columna en pantallas pequeñas */
+    gap: 1rem; /* Espaciado entre los botones */
   }
 }
 
 /* =========================
-   Responsive — Móvil pequeño (≤ 400px)
+   Ajustes adicionales para la vista móvil (≤ 700px)
    ========================= */
-@media (max-width: 400px) {
-  .title-user {
-    font-size: 1rem;
-    letter-spacing: 1px;
+@media (max-width: 700px) {
+
+  .mat-form-field {
+    width: 100% !important;
+    margin-left: 0; /* Elimina el margen */
   }
 
-  .body-registro {
-    gap: 1.2rem;
-    padding-top: 1rem;
-  }
+}
 
-  .btn-primary,
-  .btn-danger {
-    font-size: 13px;
-    height: 44px;
-  }
+.invalid-feedback, .feedback-error {
+  margin-left: 2.5rem;
 }

@@ -2,31 +2,30 @@ import { Injectable } from '@angular/core';
 import { ErrorsService } from './tools/errors-service';
 import { ValidatorService } from './tools/validator-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthServices } from './auth-services';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthServices } from './auth-services';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdministradoresService {
 
-
   constructor(
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
-    private http: HttpClient,  // para manejar las peticiones http 
+    private http: HttpClient,
     private authServices: AuthServices
   ) {}
 
-
-   /** Genera los HttpHeaders con el token de sesión si existe */
+  /** Genera los HttpHeaders con el token de sesión si existe */
   private getAuthHeaders(): HttpHeaders {
     const token = this.authServices.getSessionToken();
     return token
       ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` })
       : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
+
   public esquemaAdmin(){
     return {
       'rol':'',
@@ -90,14 +89,12 @@ export class AdministradoresService {
       error["edad"] = this.errorService.required;
     }else if(!this.validatorService.numeric(data["edad"])){
       error["edad"] = this.errorService.numeric;
-    }else if(Number(data["edad"])<18){
+    }else if(data["edad"]<18){
       error["edad"] = "La edad debe ser mayor o igual a 18";
     }
 
     if(!this.validatorService.required(data["telefono"])){
       error["telefono"] = this.errorService.required;
-    } else if (!this.validatorService.phoneMX(data["telefono"])) {
-      error["telefono"] = 'Teléfono inválido. Debe contener 10 dígitos.';
     }
 
     if(!this.validatorService.required(data["ocupacion"])){
@@ -113,4 +110,18 @@ export class AdministradoresService {
     return this.http.post<any>(`${environment.url_api}/admin/`, data, { headers: this.getAuthHeaders() });
   }
 
+  //Creamos la petición GET para obtener la lista de administradores, esta función se llamará en el método ngOnInit() del componente admin-screen.ts
+  public obtenerAdmins(): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/lista-admins/`, { headers: this.getAuthHeaders() });
+  }
+
+  //Creamos la petición GET para obtener los datos de un administrador por su id, esta función se llamará en el método obtenerUsuarioPorId() del componente registro-usuarios-screen.ts
+  public obtenerAdminPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/admin/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  //Creamos la petición PUT para actualizar los datos de un administrador, esta función se llamará en el método actualizar() del componente registro-admin.ts
+  public actualizarAdmin(data: any): Observable<any> {
+    return this.http.put<any>(`${environment.url_api}/admin/`, data, { headers: this.getAuthHeaders() });
+  }
 }

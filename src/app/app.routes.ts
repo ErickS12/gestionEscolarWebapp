@@ -1,21 +1,56 @@
 import { Routes } from '@angular/router';
+import { AuthLayout } from './layouts/auth-layout/auth-layout';
+import { DashboardLayout } from './layouts/dashboard-layout/dashboard-layout';
+import { AuthGuard } from './guards/auth.guard';
+
 
 export const routes: Routes = [
-    {path:'',redirectTo:'login',pathMatch:'full'},
-    {
-        path:'login',
-        loadComponent:() => import('./screens/login-screen/login-screen').then(m=>m.LoginScreen),
-    },
-    {
+
+  {
+    path: '',
+    component: AuthLayout,
+    children: [
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      {
+        path: 'login',
+        loadComponent: () => import('./screens/login-screen/login-screen').then(m => m.LoginScreen),
+      },
+      {
         path :'registro-usuarios-screen',
         loadComponent:() => import('./screens/registro-usuarios-screen/registro-usuarios-screen').then(m=>m.RegistroUsuariosScreen),
-    },
-    {
-    path: 'home',
-    loadComponent: () => import('./screens/home-screen/home-screen').then(m => m.HomeScreen),
-    },
-  // TODO:Agregar la forma correcta de rutas con el Auth-layout y el Dashboard-layout para cada tipo de usuario (administrador, maestro, alumno)
+      },
+      {
+        path: 'registro-usuarios/:rol/:id',
+        loadComponent: () => import('./screens/registro-usuarios-screen/registro-usuarios-screen').then(m => m.RegistroUsuariosScreen),
+      },
+    ]
+  },
 
-    {path:'**',redirectTo:'login'}
+  {
+    path: '',
+    component: DashboardLayout,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'home',
+        loadComponent: () => import('./screens/home-screen/home-screen').then(m => m.HomeScreen),
+      },
+      {
+        path: 'administrador',
+        loadComponent: () => import('./screens/admin-screen/admin-screen').then(m => m.AdminScreen),
+      },
+      {
+        path: 'alumnos',
+        loadComponent: () => import('./screens/alumnos-screen/alumnos-screen').then(m => m.AlumnosScreen),
+      },
+      {
+        path: 'maestros',
+        loadComponent: () => import('./screens/maestros-screen/maestros-screen').then(m => m.MaestrosScreen),
+      },
+    ]
+  },
+
+  // Retorna a la ruta de login para cualquier ruta no reconocida
+
+  { path: '**', redirectTo: 'login' },
 ];
-

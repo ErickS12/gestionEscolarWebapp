@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { NgxMaskDirective } from "ngx-mask";
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { AdministradoresService } from '../../services/administradores-service'; //importamos el servicio de administradores para usar sus métodos de validación y registro 
+import { AdministradoresService } from '../../services/administradores-service';
 import { NotificationService } from '../../services/tools/notification-service';
-
 
 @Component({
   selector: 'app-registro-admin',
@@ -32,24 +31,28 @@ export class RegistroAdmin implements OnInit {
   public inputType_1: string = 'password';
   public inputType_2: string = 'password';
 
-
-  //ideclarsmos cosas en nuestro constructor 
   constructor(
     private location: Location,
     private router: Router,
     private administradoresService: AdministradoresService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
-    ngOnInit() {
-    //Inicializar el objeto admin con el esquema definido en el servicio
-    this.admin = this.administradoresService.esquemaAdmin();
-    //Asignar el rol al admin que se va a registrar o editar
-    this.admin.rol = this.rol;
+  ngOnInit() {
+    //Primero validamos si existe un rol y un id, si es así, estamos en modo edición y cargamos los datos del usuario a editar
+    if(this.activatedRoute.snapshot.params['id'] !== undefined){
+      this.editar = true;
+      //Asignamos a nuestra variable global el valor del ID que viene por la URL
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      //Asignamos los datos del usuario que vienen desde la vista principal con el decorador
+      this.admin = this.datos_user;
+    }else{
+      // Si no va a editar, entonces inicializamos el JSON para registro nuevo
+      this.admin = this.administradoresService.esquemaAdmin();
+      this.admin.rol = this.rol;
+    }
   }
-
-
- 
 
   //Funciones para password
   public showPassword()
@@ -80,9 +83,8 @@ export class RegistroAdmin implements OnInit {
     this.location.back();
   }
 
-
   public registrar(){
-    //Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
+    // Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo admin
     this.errors = {};
     console.log("Datos del admin: ", this.admin);
 
@@ -95,7 +97,7 @@ export class RegistroAdmin implements OnInit {
 
     // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
     if(this.admin.password === this.admin.confirmar_password){
-      // TODO: Aquí iría la lógica para registrar al administrador, como llamar a un servicio que se encargue de hacer la petición al backend
+      // Si no hay errores de validación, procedemos a registrar al admin
       this.administradoresService.registrarAdmin(this.admin).subscribe({
         next: (response) => {
           this.notificationService.success("Administrador registrado exitosamente");
@@ -114,10 +116,42 @@ export class RegistroAdmin implements OnInit {
       this.admin.confirmar_password="";
     }
 
+
+
   }
 
   public actualizar(){
-
+    // Validación de los datos
+    this.errors = {};
+    this.errors = this.administradoresService.validarAdmin(this.admin, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return;
+    }
+    // Llamamos a la función para actualizar al administrador, esta función se encuentra en el servicio de administradores
+    this.administradoresService.actualizarAdmin(this.admin).subscribe({
+      next: (response) => {
+        this.notificationService.success("Administrador actualizado exitosamente");
+        console.log(response);
+        //Si se actualiza correctamente, redirigimos al login
+        this.router.navigate(['/administrador']);
+      },
+      error: (error) => {
+        console.error("Error al actualizar administrador: ", error);
+        this.notificationService.error("Error al actualizar administrador");
+      }
+    });
   }
 
+  // Función para los campos solo de datos alfabeticos
+  public soloLetras(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo letras (mayúsculas y minúsculas) y espacio
+    if (
+      !(charCode >= 65 && charCode <= 90) &&  // Letras mayúsculas
+      !(charCode >= 97 && charCode <= 122) && // Letras minúsculas
+      charCode !== 32                         // Espacio
+    ) {
+      event.preventDefault();
+    }
+  }
 }
