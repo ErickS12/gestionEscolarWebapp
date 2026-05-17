@@ -1,4 +1,4 @@
-<!-- Formulario de registro para administradores -->
+<!-- Formulario de registro para maestros -->
 <div class="wrapper">
   <div class="section-registro">
     <form class="body-registro" (ngSubmit)="!editar ? registrar() : actualizar()" novalidate>
@@ -122,8 +122,8 @@
           </mat-checkbox>
           }
         </div>
-        @if (errors.materias_json) {
-          <div class="invalid-feedback">{{ errors.materias_json }}</div>
+          @if (errors.materias_json) {
+            <div class="invalid-feedback">{{ errors.materias_json }}</div>
         }
       </div>
       <!-- En esta clase se definen los botones para guardar o actualizar el registro -->

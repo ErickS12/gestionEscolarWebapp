@@ -1,11 +1,11 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-
 import { routes } from './app.routes';
-
 import { provideNgxMask } from 'ngx-mask';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { getSpanishPaginatorIntl } from './shared/spanish-paginator-intl';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideNgxMask(),
     { provide: MAT_DATE_LOCALE, useValue: 'es-MX' },
+    { provide: MatPaginatorIntl, useFactory: getSpanishPaginatorIntl },
   ]
 };

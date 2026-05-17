@@ -6,6 +6,11 @@ import { AuthServices } from '../../services/auth-services';
 import { RegistroAlumnos } from '../../partials/registro-alumnos/registro-alumnos';
 import { RegistroAdmin } from '../../partials/registro-admin/registro-admin';
 import { RegistroMaestros } from '../../partials/registro-maestros/registro-maestros';
+import { ActivatedRoute } from '@angular/router';
+import { AdministradoresService } from '../../services/administradores-service';
+import { MaestrosService } from '../../services/maestros-service';
+import { AlumnoService } from '../../services/alumnos-service';
+import { NotificationService } from '../../services/tools/notification-service';
 
 
 @Component({
@@ -36,10 +41,64 @@ export class RegistroUsuariosScreen implements OnInit {
 
   constructor(
     private location: Location,
-    public authService: AuthServices
+    public authService: AuthServices,
+    private activatedRoute: ActivatedRoute,
+    private administradoresService: AdministradoresService,
+    private maestrosService: MaestrosService,
+    private alumnoService: AlumnoService,
+    private notificationService: NotificationService,
   ) { }
 
   ngOnInit(): void {
+    this.user.tipo_usuario = '';
+    //Obtener el rol y id del usuario a editar desde la URL
+    if(this.activatedRoute.snapshot.params['rol'] !== undefined){
+      this.rol = this.activatedRoute.snapshot.params['rol'];
+    }
+    if(this.activatedRoute.snapshot.params['id'] !== undefined){
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+    }
+
+    //Si se recibe un rol y un id, se activa el modo de edición
+    if(this.rol !== "" && this.idUser !== 0){
+      this.editar = true;
+      //Llamamos a la función para obtener los datos del usuario a editar
+      this.obtenerUsuarioPorId();
+    }
+  }
+
+  //Función para obtener los datos del usuario a editar, dependiendo del rol se llama a la función correspondiente
+  public obtenerUsuarioPorId() {
+    if(this.rol === "administrador"){
+      //Lógica para obtener un administrador por su ID
+      this.administradoresService.obtenerAdminPorId(this.idUser).subscribe({
+        next: (response) => {
+          this.user = response;
+          //Verificar que se hayan obtenido los datos correctamente
+          console.log("Datos del admin encontrado: ", this.user);
+          // Asignar datos, soportando respuesta plana o anidada
+          this.user.first_name = response.user?.first_name || response.first_name;
+          this.user.last_name = response.user?.last_name || response.last_name;
+          this.user.email = response.user?.email || response.email;
+          // Establecer el tipo de usuario para mostrar el formulario correspondiente
+          this.user.tipo_usuario = this.rol;
+          // Activar el formulario de administrador
+          this.isAdmin = true;
+        },
+        error: (error) => {
+          this.notificationService.error('Error al cargar los datos del administrador. Intente de nuevo más tarde.');
+          console.log(error);
+
+        }
+      });
+
+    }else if(this.rol === "alumno"){
+      //Lógica para obtener un alumno por su ID
+      //TODO: Implementar la lógica para obtener un alumno por su ID utilizando el servicio de alumnos
+    }else if(this.rol === "maestro"){
+      //Lógica para obtener un maestro por su ID
+      //TODO: Implementar la lógica para obtener un maestro por su ID utilizando el servicio de maestros
+    }
   }
 
   public radioChange(event: MatRadioChange) {

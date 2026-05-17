@@ -34,28 +34,30 @@
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Correo electrónico</mat-label>
-        <input matInput [(ngModel)]="admin.email" name="email" placeholder="Escribe correo electrónico">
+        <input matInput [(ngModel)]="admin.email" name="email" placeholder="Escribe correo electrónico" [disabled]="editar">
       </mat-form-field>
       @if (errors.email) {
         <div class="invalid-feedback">{{ errors.email }}</div>
       }
-
-      <mat-form-field class="mat-input" appearance="outline">
-        <mat-label>Contraseña</mat-label>
-        <input matInput [(ngModel)]="admin.password" name="password" [type]="inputType_1" placeholder="Escribe contraseña del administrador">
-        <mat-icon matSuffix class="eye-icon" (click)="showPassword()">{{hide_1 ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </mat-form-field>
-      @if (errors.password) {
-        <div class="invalid-feedback">{{ errors.password }}</div>
-      }
-
-      <mat-form-field class="mat-input" appearance="outline">
-        <mat-label>Confirmar contraseña</mat-label>
-        <input matInput [(ngModel)]="admin.confirmar_password" name="confirmar_password" [type]="inputType_2" placeholder="Confirma contraseña del administrador">
-        <mat-icon matSuffix class="eye-icon" (click)="showPwdConfirmar()">{{hide_2 ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </mat-form-field>
-      @if (errors.confirmar_password) {
-        <div class="invalid-feedback">{{ errors.confirmar_password }}</div>
+      @if (!editar) {
+  
+        <mat-form-field class="mat-input" appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [(ngModel)]="admin.password" name="password" [type]="inputType_1" placeholder="Escribe contraseña del administrador">
+          <mat-icon matSuffix class="eye-icon" (click)="showPassword()">{{hide_1 ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+        @if (errors.password) {
+          <div class="invalid-feedback">{{ errors.password }}</div>
+        }
+  
+        <mat-form-field class="mat-input" appearance="outline">
+          <mat-label>Confirmar contraseña</mat-label>
+          <input matInput [(ngModel)]="admin.confirmar_password" name="confirmar_password" [type]="inputType_2" placeholder="Confirma contraseña del administrador">
+          <mat-icon matSuffix class="eye-icon" (click)="showPwdConfirmar()">{{hide_2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </mat-form-field>
+        @if (errors.confirmar_password) {
+          <div class="invalid-feedback">{{ errors.confirmar_password }}</div>
+        }
       }
 
       <mat-form-field class="mat-input" appearance="outline">

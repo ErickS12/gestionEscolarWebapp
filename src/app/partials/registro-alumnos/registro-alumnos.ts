@@ -3,7 +3,7 @@ import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
-import { AlumnoService } from '../../services/alumno-service';
+import { AlumnoService } from '../../services/alumnos-service';
 import { NotificationService } from '../../services/tools/notification-service';
 
 @Component({

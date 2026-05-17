@@ -64,6 +64,10 @@ export class RegistroMaestros implements OnInit {
   ngOnInit() {
     this.maestro = this.maestrosService.esquemaMaestro();
     this.maestro.rol = this.rol;
+    // Asegurar que materias_json siempre sea un array
+    if (!Array.isArray(this.maestro.materias_json)) {
+      this.maestro.materias_json = [];
+    }
   }
 
   //Funciones para password
