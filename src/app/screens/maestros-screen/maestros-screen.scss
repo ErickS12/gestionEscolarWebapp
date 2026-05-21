@@ -315,6 +315,8 @@ table {
   .table-responsive    { -webkit-overflow-scrolling: touch; }
 }
 
+
+
 /* =========================
    Ajustes para tablets 805–992 px
    (regla original preservada)
@@ -334,6 +336,14 @@ table {
     min-width: 700px;
     width: 100%;
   }
+}
+
+/* Centra el número dentro de la cajita del select */
+::ng-deep .custom-paginator .mat-mdc-select-value {
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* =========================

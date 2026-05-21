@@ -315,6 +315,17 @@ table {
   .table-responsive    { -webkit-overflow-scrolling: touch; }
 }
 
+
+
+/* Centra el número dentro de la cajita del select */
+::ng-deep .custom-paginator .mat-mdc-select-value {
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
 /* =========================
    Ajustes para tablets 805–992 px
    (regla original preservada)

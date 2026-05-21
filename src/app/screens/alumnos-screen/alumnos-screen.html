@@ -19,8 +19,7 @@
           </div>
         </div>
         <!-- Colocamos la tabla de alumnos -->
-        <ng-container *ngIf="lista_alumnos.length > 0; else noData">
-          <div class="table-scroll-wrapper">
+        <div class="table-scroll-wrapper" [hidden]="lista_alumnos.length === 0">
             <div class="mat-elevation-z8">
               <table mat-table [dataSource]="dataSource" style="min-width: 1200px; width: 100%;">
                 <!-- 1era columna -->
@@ -86,18 +85,16 @@
               </table>
             </div>
             <!-- Colocamos la paginación de la tabla -->
-            <mat-paginator #paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-              aria-label="Select page of periodic elements">
+            <mat-paginator class="custom-paginator" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+              aria-label="Select page of periodic elements" style="min-width: 1200px; width: 100%;">
             </mat-paginator>
+        </div>
+
+        <div class="col-12" *ngIf="lista_alumnos.length === 0">
+          <div class="alert alert-warning" role="alert">
+            No hay alumnos registrados.
           </div>
-        </ng-container>
-        <ng-template #noData>
-          <div class="col-12">
-            <div class="alert alert-warning" role="alert">
-              No hay alumnos registrados.
-            </div>
-          </div>
-        </ng-template>
+        </div>
       </div>
     </div>
   </div>
