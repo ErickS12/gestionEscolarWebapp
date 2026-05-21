@@ -17,3 +17,15 @@ export interface DatosMaestro {
 }
 
 //TODO: Crear interfaces para alumno y administrador
+
+export interface DatosAlumno {
+  id: number;
+  id_alumno: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  fecha_nacimiento: string;
+  telefono: string;
+  curp: string;
+  carrera: number;
+}

@@ -9,37 +9,35 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AlumnoService {
-
-
   /** Genera los HttpHeaders con el token de sesión si existe */
   private getAuthHeaders(): HttpHeaders {
     const token = this.authServices.getSessionToken();
     return token
-      ? new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` })
+      ? new HttpHeaders({ 'Content-Type': 'application/json', Authorization: `Bearer ${token}` })
       : new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
   constructor(
     private validatorService: ValidatorService,
     private errorService: ErrorsService,
-    private http: HttpClient,  // para manejar las peticiones http 
-    private authServices: AuthServices
+    private http: HttpClient, // para manejar las peticiones http
+    private authServices: AuthServices,
   ) {}
 
   public esquemaAlumno() {
     return {
-      'rol': '',
-      'id_alumno': '',
-      'first_name': '',
-      'last_name': '',
-      'email': '',
-      'password': '',
-      'confirmar_password': '',
-      'fecha_nacimiento': '',
-      'telefono': '',
-      'curp': '',
-      'carrera': '',
-      'materias_json': []
+      rol: '',
+      id_alumno: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      confirmar_password: '',
+      fecha_nacimiento: '',
+      telefono: '',
+      curp: '',
+      carrera: '',
+      materias_json: [],
     };
   }
 
@@ -110,7 +108,15 @@ export class AlumnoService {
 
   //Creamos la petición POST para registrar al alumno, esta función se llamará en el método registrar() del componente registro-alumno.ts
   public registrarAlumno(data: any) {
-    return this.http.post<any>(`${environment.url_api}/alumnos/`, data, { headers: this.getAuthHeaders() });
+    return this.http.post<any>(`${environment.url_api}/alumnos/`, data, {
+      headers: this.getAuthHeaders(),
+    });
   }
 
+  //Funcion para obtener la lista de alumnos registrados, esta función se llamará en el método obtenerAlumnos() del componente alumnos-screen.ts
+  public obtenerListaAlumnos() {
+    return this.http.get<any>(`${environment.url_api}/lista-alumnos/`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 }
