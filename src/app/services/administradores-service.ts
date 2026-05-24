@@ -124,4 +124,11 @@ export class AdministradoresService {
   public actualizarAdmin(data: any): Observable<any> {
     return this.http.put<any>(`${environment.url_api}/admin/`, data, { headers: this.getAuthHeaders() });
   }
+
+  //Creamos la petición DELETE para eliminar un administrador, esta función se llamará en el método eliminarAdmin() dentro del modal eliminar-user-modal.ts
+  public desactivarAdmin(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.url_api}/admin/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
+
 }

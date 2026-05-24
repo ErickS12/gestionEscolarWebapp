@@ -119,4 +119,11 @@ export class AlumnoService {
       headers: this.getAuthHeaders(),
     });
   }
+
+  //Creamos la petición DELETE para eliminar un alumno, esta función se llamará en el método eliminarAlumno() dentro del modal eliminar-user-modal.ts
+  public eliminarAlumno(id: number) {
+    return this.http.delete<any>(`${environment.url_api}/alumnos/?id=${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
 }

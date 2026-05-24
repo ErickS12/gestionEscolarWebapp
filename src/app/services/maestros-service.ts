@@ -119,4 +119,10 @@ export class MaestrosService {
   public obtenerListaMaestros(): Observable<any> {
     return this.http.get<any>(`${environment.url_api}/lista-maestros/`, { headers: this.getAuthHeaders() });
   }
+
+  //Creamos petición DELETE para eliminar un maestro, esta función se llamará en el método eliminarMaestro() dentro del modal eliminar-user-modal.ts
+  public eliminarMaestro(id: number): Observable<any> {
+    return this.http.delete<any>(`${environment.url_api}/maestros/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
 }

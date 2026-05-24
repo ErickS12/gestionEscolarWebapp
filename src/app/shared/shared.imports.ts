@@ -22,8 +22,7 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTableModule} from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-
+import { MatPaginatorModule } from '@angular/material/paginator';import { MatSortModule } from '@angular/material/sort';
 /* =========================
    ngx-mask (inputs de código)
    ========================= */
@@ -58,6 +57,7 @@ export const SHARED_IMPORTS = [
   MatSidenavModule,
   MatTableModule,
   MatPaginatorModule,
+  MatSortModule,
   NgxMaskDirective,
   NgxMaskPipe,
   NgClass
