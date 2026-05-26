@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { MaestrosService } from '../../services/maestros-service';
@@ -58,15 +58,30 @@ export class RegistroMaestros implements OnInit {
     private location: Location,
     private router: Router,
     private maestrosService: MaestrosService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.maestro = this.maestrosService.esquemaMaestro();
-    this.maestro.rol = this.rol;
-    // Asegurar que materias_json siempre sea un array
-    if (!Array.isArray(this.maestro.materias_json)) {
-      this.maestro.materias_json = [];
+    //Primero validamos si existe un rol y un id, si es así, estamos en modo edición y cargamos los datos del usuario a editar
+    if(this.activatedRoute.snapshot.params['id'] !== undefined){
+      this.editar = true;
+      //Asignamos a nuestra variable global el valor del ID que viene por la URL
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      //Asignamos los datos del usuario que vienen desde la vista principal con el decorador
+      this.maestro = this.datos_user;
+      // Asegurar que materias_json sea un array en modo edición
+      if (!Array.isArray(this.maestro.materias_json)) {
+        this.maestro.materias_json = [];
+      }
+    } else {
+      // Si no va a editar, entonces inicializamos el JSON para registro nuevo
+      this.maestro = this.maestrosService.esquemaMaestro();
+      this.maestro.rol = this.rol;
+      // Asegurar que materias_json siempre sea un array
+      if (!Array.isArray(this.maestro.materias_json)) {
+        this.maestro.materias_json = [];
+      }
     }
   }
 
@@ -167,7 +182,25 @@ public registrar(){
 
 
   public actualizar(){
-
+    // Validación de los datos
+    this.errors = {};
+    this.errors = this.maestrosService.validarMaestro(this.maestro, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return;
+    }
+    // Llamamos a la función para actualizar al maestro, esta función se encuentra en el servicio de maestros
+    this.maestrosService.actualizarMaestro(this.maestro).subscribe({
+      next: (response) => {
+        this.notificationService.success("Maestro actualizado exitosamente");
+        console.log(response);
+        //Si se actualiza correctamente, redirigimos al login
+        this.router.navigate(['/maestro']);
+      },
+      error: (error) => {
+        console.error("Error al actualizar maestro: ", error);
+        this.notificationService.error("Error al actualizar maestro");
+      }
+    });
   }
 
   //Función para detectar el cambio de fecha
@@ -200,5 +233,17 @@ public registrar(){
       return false;
     }
   }
-
+  
+  // Función para los campos solo de datos alfabeticos
+  public soloLetras(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo letras (mayúsculas y minúsculas) y espacio
+    if (
+      !(charCode >= 65 && charCode <= 90) &&  // Letras mayúsculas
+      !(charCode >= 97 && charCode <= 122) && // Letras minúsculas
+      charCode !== 32                         // Espacio
+    ) {
+      event.preventDefault();
+    }
+  }
 }

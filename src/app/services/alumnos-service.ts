@@ -120,6 +120,20 @@ export class AlumnoService {
     });
   }
 
+  //Funcion para obtener un alumno por su ID, esta función se llamará en el método obtenerUsuarioPorId() del componente registro-usuarios-screen.ts 
+  public obtenerAlumnoPorId(id: number) {
+    return this.http.get<any>(`${environment.url_api}/alumnos/?id=${id}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  //Creamos la petición PUT para actualizar los datos del alumno, esta función se llamará en el método actualizar() dentro del componente registro-alumno.ts
+  public actualizarAlumno(data: any) {
+    return this.http.put<any>(`${environment.url_api}/alumnos/`, data, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
   //Creamos la petición DELETE para eliminar un alumno, esta función se llamará en el método eliminarAlumno() dentro del modal eliminar-user-modal.ts
   public eliminarAlumno(id: number) {
     return this.http.delete<any>(`${environment.url_api}/alumnos/?id=${id}`, {

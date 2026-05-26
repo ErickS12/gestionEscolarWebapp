@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AlumnoService } from '../../services/alumnos-service';
@@ -23,10 +23,11 @@ export class RegistroAlumnos implements OnInit {
   public errors:any={};
   public inputType_1: string = 'password'; //inputs para cada entrada
   public inputType_2: string = 'password';
+  public idUser: number = 0;
   public hide_1: boolean = false;
   public hide_2: boolean = false;
   public editar:boolean = false;
-  public posgradoFlag:boolean = false;
+  //public posgradoFlag:boolean = false;
 
 public carrera: any[] = [
   { value: '1', viewValue: 'Ingeniería en Ciencias de la Computación' },
@@ -57,12 +58,23 @@ constructor(
     private location: Location,
     private router: Router,
     private alumnoService: AlumnoService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+    //Primero validamos si existe un rol y un id, si es así, estamos en modo edición y cargamos los datos del usuario a editar
+    if(this.activatedRoute.snapshot.params['id'] !== undefined){
+      this.editar = true;
+      //Asignamos a nuestra variable global el valor del ID que viene por la URL
+      this.idUser = this.activatedRoute.snapshot.params['id'];
+      //Asignamos los datos del usuario que vienen desde la vista principal con el decorador
+      this.alumno = this.datos_user;
+    }else{
+      // Si no va a editar, entonces inicializamos el JSON para registro nuevo
     this.alumno = this.alumnoService.esquemaAlumno();
     this.alumno.rol = this.rol;
+  }
   }
 
 
@@ -173,6 +185,27 @@ constructor(
   }
 
   public actualizar(){
+    // Validación de los datos
+    this.errors = {};
+    this.errors = this.alumnoService.validarAlumno(this.alumno, this.editar);
+    if(Object.keys(this.errors).length > 0){
+      return;
+    }
+    // Llamamos a la función para actualizar al alumno, esta función se encuentra en el servicio de alumnos
+    this.alumnoService.actualizarAlumno(this.alumno).subscribe({
+      next: (response) => {
+        this.notificationService.success("Alumno actualizado exitosamente");
+        console.log(response);
+        //Si se actualiza correctamente, redirigimos al login
+        this.router.navigate(['/alumno']);
+      },
+      error: (error) => {
+        console.error("Error al actualizar alumno: ", error);
+        this.notificationService.error("Error al actualizar alumno");
+      }
+    });
+
+
 
   }
 
@@ -188,4 +221,18 @@ constructor(
       });
     }
   }
+
+  // Función para los campos solo de datos alfabeticos
+  public soloLetras(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0);
+    // Permitir solo letras (mayúsculas y minúsculas) y espacio
+    if (
+      !(charCode >= 65 && charCode <= 90) &&  // Letras mayúsculas
+      !(charCode >= 97 && charCode <= 122) && // Letras minúsculas
+      charCode !== 32                         // Espacio
+    ) {
+      event.preventDefault();
+    }
+  }
 }
+

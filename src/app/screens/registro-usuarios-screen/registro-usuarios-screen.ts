@@ -68,7 +68,7 @@ export class RegistroUsuariosScreen implements OnInit {
   }
 
   //Función para obtener los datos del usuario a editar, dependiendo del rol se llama a la función correspondiente
-  public obtenerUsuarioPorId() {
+  public obtenerUsuarioPorId() {  
     if(this.rol === "administrador"){
       //Lógica para obtener un administrador por su ID
       this.administradoresService.obtenerAdminPorId(this.idUser).subscribe({
@@ -94,10 +94,48 @@ export class RegistroUsuariosScreen implements OnInit {
 
     }else if(this.rol === "alumno"){
       //Lógica para obtener un alumno por su ID
-      //TODO: Implementar la lógica para obtener un alumno por su ID utilizando el servicio de alumnos
+      this.alumnoService.obtenerAlumnoPorId(this.idUser).subscribe({
+        next: (response) => {
+          this.user = response;
+          //Verificar que se hayan obtenido los datos correctamente
+          console.log("Datos del alumno encontrado: ", this.user);
+          // Asignar datos, soportando respuesta plana o anidada
+          this.user.first_name = response.user?.first_name || response.first_name;
+          this.user.last_name = response.user?.last_name || response.last_name;
+          this.user.email = response.user?.email || response.email;
+          // this.user.carrera = response.carrera || response.carrera_id;
+          this.user.tipo_usuario = this.rol;
+          // Activar el formulario de alumno
+          this.isAlumno = true;
+        },
+        error: (error) => {
+          this.notificationService.error('Error al cargar los datos del alumno. Intente de nuevo más tarde.');
+          console.log(error);
+        }
+      });
+
     }else if(this.rol === "maestro"){
       //Lógica para obtener un maestro por su ID
       //TODO: Implementar la lógica para obtener un maestro por su ID utilizando el servicio de maestros
+      this.maestrosService.obtenerMaestroPorId(this.idUser).subscribe({
+        next: (response) => {
+          this.user = response;
+          //Verificar que se hayan obtenido los datos correctamente
+          console.log("Datos del maestro encontrado: ", this.user);
+          // Asignar datos, soportando respuesta plana o anidada
+          this.user.first_name = response.user?.first_name || response.first_name;
+          this.user.last_name = response.user?.last_name || response.last_name;
+          this.user.email = response.user?.email || response.email;
+          // this.user.departamento = response.departamento || response.departamento_id;
+          this.user.tipo_usuario = this.rol;
+          // Activar el formulario de maestro
+          this.isMaestro = true;
+        },
+        error: (error) => {
+          this.notificationService.error('Error al cargar los datos del maestro. Intente de nuevo más tarde.');
+          console.log(error);
+        }
+      });
     }
   }
 

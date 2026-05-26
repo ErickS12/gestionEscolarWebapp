@@ -120,6 +120,16 @@ export class MaestrosService {
     return this.http.get<any>(`${environment.url_api}/lista-maestros/`, { headers: this.getAuthHeaders() });
   }
 
+  //Función para obtener un maestro por su ID, esta función se llamará en el método obtenerUsuarioPorId() del componente registro-usuarios-screen.ts
+  public obtenerMaestroPorId(id: number): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/maestros/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  //Creamos petición PUT para actualizar los datos del maestro, esta función se llamará en el método actualizar() dentro del componente registro-maestros.ts
+  public actualizarMaestro(data: any): Observable<any> {
+    return this.http.put<any>(`${environment.url_api}/maestros/`, data, { headers: this.getAuthHeaders() });
+  }
+
   //Creamos petición DELETE para eliminar un maestro, esta función se llamará en el método eliminarMaestro() dentro del modal eliminar-user-modal.ts
   public eliminarMaestro(id: number): Observable<any> {
     return this.http.delete<any>(`${environment.url_api}/maestros/?id=${id}`, { headers: this.getAuthHeaders() });
