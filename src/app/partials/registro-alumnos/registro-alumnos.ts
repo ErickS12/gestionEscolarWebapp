@@ -54,6 +54,19 @@ public posgrado: any[] = [
     {value: '10', nombre: 'Administración de S.O.'},
   ];
 
+  public sexo: any[] = [
+    { value: 'masculino', viewValue: 'Masculino' },
+    { value: 'femenino', viewValue: 'Femenino' },
+    { value: 'prefiero_no_decir', viewValue: 'Prefiero no decir' },
+  ];
+
+  public campus: any[] = [
+    { value: '1', viewValue: 'CU San Manuel' },
+    { value: '2', viewValue: 'CU2 Valsequillo' },
+  ];
+
+  public sueldoFocused: boolean = false;
+
 constructor(
     private location: Location,
     private router: Router,
@@ -74,7 +87,7 @@ constructor(
       // Si no va a editar, entonces inicializamos el JSON para registro nuevo
     this.alumno = this.alumnoService.esquemaAlumno();
     this.alumno.rol = this.rol;
-  }
+  }  
   }
 
 

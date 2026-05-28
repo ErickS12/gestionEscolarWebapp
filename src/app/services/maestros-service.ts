@@ -40,7 +40,9 @@ export class MaestrosService {
       'rfc': '',
       'cubiculo': '',
       'area_investigacion': '',
-      'materias_json': []
+      'materias_json': [],
+      campus: '',
+      sueldo_estimado: '',
     }
 
   }
@@ -105,6 +107,17 @@ export class MaestrosService {
 
     if(!this.validatorService.required(data["materias_json"])){
       error["materias_json"] = "Debes seleccionar materias para poder registrarte";
+    }
+
+    
+    if (!this.validatorService.required(data['campus'])) {
+      error['campus'] = this.errorService.required;
+    }
+
+    if (!this.validatorService.required(data['sueldo_estimado'])) {
+      error['sueldo_estimado'] = this.errorService.required;
+    } else if (!this.validatorService.numeric(data['sueldo_estimado'])) {
+      error['sueldo_estimado'] = this.errorService.numeric;
     }
 
     return error;

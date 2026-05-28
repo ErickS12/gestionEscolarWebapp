@@ -220,3 +220,31 @@ p, span, label, input, button {
     background: color.adjust($color-primary, $lightness: -10%);
   }
 }
+
+
+.custom-select-panel {
+  background-color: white !important;
+  
+  .mat-mdc-option {
+    background-color: white;
+    
+    &:hover {
+      background-color: #f5f5f5 !important;
+    }
+  }
+}
+
+span.mat-mdc-select-placeholder.mat-mdc-select-min-line {
+  margin-left: 0.5rem;
+}
+
+// Agregar margin-left a todos los placeholders de inputs
+::placeholder {
+  margin-left: 0.5rem;
+}
+
+// Para Material form fields
+.mat-mdc-form-field-label {
+  margin-left: 0.5rem !important;
+}
+

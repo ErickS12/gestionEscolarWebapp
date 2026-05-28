@@ -39,6 +39,13 @@ export class RegistroAdmin implements OnInit {
     private activatedRoute: ActivatedRoute
   ) { }
 
+
+  public categoria: any[] = [
+  { value: '1', viewValue: 'Tiempo Completo' },
+  { value: '2', viewValue: 'Medio Tiempo' },
+  { value: '3', viewValue: 'Hora - Clase' },
+  ];
+
   ngOnInit() {
     //Primero validamos si existe un rol y un id, si es así, estamos en modo edición y cargamos los datos del usuario a editar
     if(this.activatedRoute.snapshot.params['id'] !== undefined){

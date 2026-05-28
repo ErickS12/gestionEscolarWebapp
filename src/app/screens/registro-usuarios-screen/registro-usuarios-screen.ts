@@ -40,19 +40,20 @@ export class RegistroUsuariosScreen implements OnInit {
   public tipo_user:string = "";
 
   constructor(
-    private location: Location,
-    public authService: AuthServices,
-    private activatedRoute: ActivatedRoute,
-    private administradoresService: AdministradoresService,
-    private maestrosService: MaestrosService,
+    private location: Location, // El Location es para poder regresar a la pantalla anterior al hacer clic en el botón de regresar, utilizando la función this.location.back()
+    public authService: AuthServices, 
+    private activatedRoute: ActivatedRoute, // El ActivatedRoute es para obtener los parámetros de la URL, como el rol y el id del usuario a editar
+    private administradoresService: AdministradoresService, 
+    private maestrosService: MaestrosService, //
     private alumnoService: AlumnoService,
-    private notificationService: NotificationService,
+    private notificationService: NotificationService, // El NotificationService es para mostrar mensajes de éxito, error, etc., utilizando las funciones de este servicio en los métodos de registro y actualización de usuarios
   ) { }
 
   ngOnInit(): void {
     this.user.tipo_usuario = '';
     //Obtener el rol y id del usuario a editar desde la URL
     if(this.activatedRoute.snapshot.params['rol'] !== undefined){
+      //El activatedRoute.snapshot.params es un objeto que contiene los parámetros de la URL, en este caso se espera que la URL tenga un parámetro llamado 'rol' que indique el tipo de usuario que se va a registrar o editar (administrador, alumno o maestro), y un parámetro llamado 'id' que indique el id del usuario a editar. Si el parámetro 'rol' está definido, se asigna a la variable this.rol para usarla posteriormente en la función obtenerUsuarioPorId() y mostrar el formulario correspondiente al tipo de usuario.
       this.rol = this.activatedRoute.snapshot.params['rol'];
     }
     if(this.activatedRoute.snapshot.params['id'] !== undefined){

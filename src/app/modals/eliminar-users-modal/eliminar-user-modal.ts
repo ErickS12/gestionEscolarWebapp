@@ -20,11 +20,14 @@ export class EliminarUserModal implements OnInit{
     private alumnoService: AlumnoService,
     private notificationService: NotificationService,
     private dialogRef: MatDialogRef<EliminarUserModal>,
-    @Inject (MAT_DIALOG_DATA) public data: any
+    @Inject (MAT_DIALOG_DATA) public data: any 
+    //MatDialogData es un tipo que se puede definir para especificar la estructura de los datos que se pasan al modal, en este caso se espera un objeto con las propiedades id y rol para identificar al usuario a eliminar y su tipo (administrador, maestro o alumno).
+    //necestiamos inyectar el id y el rol del usuario a eliminar para saber que servicio usar y que id eliminar
   ) { }
 
   ngOnInit(): void {
     this.rol = this.data.rol;  
+    //accedemos al json que se pasa al modal desde el componente que lo abre, en este caso se espera que tenga una propiedad rol que indique el tipo de usuario a eliminar (administrador, maestro o alumno) y se asigna a la variable rol para usarla en la lógica de eliminación.
   }
 
   public cerrar_modal(){

@@ -23,6 +23,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatTableModule} from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';import { MatSortModule } from '@angular/material/sort';
+import {MatDialogModule} from '@angular/material/dialog';
 /* =========================
    ngx-mask (inputs de código)
    ========================= */
@@ -60,5 +61,6 @@ export const SHARED_IMPORTS = [
   MatSortModule,
   NgxMaskDirective,
   NgxMaskPipe,
-  NgClass
+  NgClass,
+   MatDialogModule
 ];

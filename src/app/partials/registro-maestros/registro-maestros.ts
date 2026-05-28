@@ -54,6 +54,14 @@ export class RegistroMaestros implements OnInit {
     {value: '10', nombre: 'Administración de S.O.'},
   ];
 
+  public campus: any[] = [
+    { value: '1', viewValue: 'CU San Manuel' },
+    { value: '2', viewValue: 'CU2 Valsequillo' },
+  ];
+  
+  public sueldoFocused: boolean = false;
+  
+
   constructor(
     private location: Location,
     private router: Router,

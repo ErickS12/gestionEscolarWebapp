@@ -93,6 +93,29 @@
         <div class="invalid-feedback">{{ errors.ocupacion }}</div>
       }
 
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Categoría</mat-label>
+        <mat-select [(ngModel)]="admin.categoria" name="categoria" panelClass="custom-select-panel" placeholder="Selecciona categoría del administrador">
+          @for (area of categoria; track $index) {
+            <mat-option [value]="area.viewValue">
+              {{area.viewValue}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (errors.categoria) {
+        <div class="invalid-feedback">{{ errors.categoria }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Grado Académico</mat-label>
+        <input matInput [(ngModel)]="admin.grado_academico" name="grado_academico" placeholder="Escribe grado académico del administrador">
+      </mat-form-field>
+      @if (errors.grado_academico) {
+        <div class="invalid-feedback">{{ errors.grado_academico }}</div>
+      }
+
+
       <!-- En esta clase se definen los botones para guardar o actualizar el registro -->
       <div class="section-buttons">
         <button class="btn btn-danger" type="button" (click)="regresar()">Cancelar</button>

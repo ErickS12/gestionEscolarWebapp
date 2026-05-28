@@ -89,7 +89,7 @@
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Carrera que estudia</mat-label>
-        <mat-select [(ngModel)]="alumno.carrera" name="carrera">
+        <mat-select [(ngModel)]="alumno.carrera" panelClass="custom-select-panel" name="carrera" placeholder="Selecciona la carrera que estudia">
           @for (area of carrera; track $index) {
             <mat-option [value]="area.viewValue">
               {{area.viewValue}}
@@ -99,6 +99,28 @@
       </mat-form-field>
       @if (errors.carrera) {
         <div class="invalid-feedback">{{ errors.carrera }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Dirección</mat-label>
+        <input matInput [(ngModel)]="alumno.direccion" name="direccion" placeholder="Escribe tu dirección">
+      </mat-form-field>
+      @if (errors.direccion) {
+        <div class="invalid-feedback">{{ errors.direccion }}</div>
+      }
+
+      <mat-form-field class="mat-input" appearance="outline">
+        <mat-label>Sexo</mat-label>
+        <mat-select [(ngModel)]="alumno.sexo" panelClass="custom-select-panel" name="sexo" placeholder="Selecciona tu sexo">
+          @for (sexoOption of sexo; track $index) {
+            <mat-option [value]="sexoOption.value">
+              {{sexoOption.viewValue}}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      @if (errors.sexo) {
+        <div class="invalid-feedback">{{ errors.sexo }}</div>
       }
 
 

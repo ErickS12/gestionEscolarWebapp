@@ -22,9 +22,9 @@ export class LoginScreen implements OnInit{
   public hide: boolean = false;
 
   constructor( 
-    public router: Router,
-    private authServices: AuthServices,
-    private notificationService: NotificationService
+    public router: Router, // el router es para redirigir a otras pantallas
+    private authServices: AuthServices, // el authServices es para llamar las funciones de autenticación, como login, logout, etc.
+    private notificationService: NotificationService // el notificationService es para mostrar mensajes de éxito, error, etc.
   ){}
   // primera ves que  queremos que se ejecute la aplicacion 
   ngOnInit(): void {
@@ -75,6 +75,10 @@ export class LoginScreen implements OnInit{
       }
     });
   }
+
+  //El this.router.navigate(['registro-usuarios-screen']) es para redirigir a la pantalla de registro de usuarios, el nombre entre corchetes es el nombre de la ruta que se definió en el app-routing.module.ts
+
+  //Para hacer que el botón de registrar redirija a la pantalla de registro de usuarios, se crea la función registrar() que llama al router para navegar a la ruta 'registro-usuarios-screen', que es la ruta que se definió para la pantalla de registro de usuarios en el app-routing.module.ts
   public registrar(){
     this.router.navigate(['registro-usuarios-screen']);
   }

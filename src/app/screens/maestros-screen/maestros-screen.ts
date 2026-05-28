@@ -10,6 +10,7 @@ import { MaestrosService } from '../../services/maestros-service';
 import { NotificationService } from '../../services/tools/notification-service';
 import { AuthServices } from '../../services/auth-services';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { EliminarUserModal } from '../../modals/eliminar-users-modal/eliminar-user-modal';
 
 @Component({
   selector: 'app-maestros-screen',
@@ -156,8 +157,33 @@ export class MaestrosScreen implements OnInit{
   public goEditar(id: number) {
     this.router.navigate(['/registro-usuarios', 'maestro', id]);
   }
+  //Metodo para eliminar un maestro, se muestra una confirmación antes de eliminar
+  public delete(idUser: number) {
+    // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar al maestro
+    const idUserSession = Number(this.authService.getUserId());
+    // --------- Pero el parámetro idUser (el de la función) es el ID del maestro que se quiere eliminar ---------
+    // Administrador puede eliminar cualquier maestro
+    // Maestro solo puede eliminar su propio registro
+    if (this.rol === 'administrador' || (this.rol === 'maestro' && idUserSession === idUser)) {
+      //Si es administrador o es maestro, es decir, cumple la condición, se puede eliminar
+      const dialogRef = this.dialog.open(EliminarUserModal,{
+        data: { id: idUser, rol: 'maestro' }, //Se pasan valores a través del componente
+        height: '288px',
+        width: '328px',
+      });
 
-  public delete(id: number) {
+      //Después de cerrar el modal, se actualiza la lista de maestros para reflejar los cambios
+      dialogRef.afterClosed().subscribe(result => {
+        if(result.isDelete){
+          this.obtenerMaestros();
+        }else{
+          this.notificationService.error("Maestro no se ha podido eliminar.");
+        }
+      });
+    }else{
+      //Si no cumple la condición, se muestra un mensaje de error
+      this.notificationService.error("No tienes permiso para eliminar a este maestro.");
+    }
 
   }
 

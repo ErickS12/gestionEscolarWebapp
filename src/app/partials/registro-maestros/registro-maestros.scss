@@ -238,3 +238,59 @@ mat-form-field {
   }
 
 }
+
+
+
+
+
+.currency-prefix {
+  margin-left: .8rem;
+  margin-right: 1rem;
+  color: #231F20;
+  font-weight: 500;
+}
+
+.currency-prefix-focused {
+  margin-left: .8rem;
+  margin-right: .5rem;
+  color: #231F20;
+  font-weight: 500;
+}
+
+
+
+/* =========================
+   Ajustes para la sección de campus
+   ========================= */
+
+.campus-container {
+  width: 90%;
+  margin-left: 5%;
+  border: 1px solid #231F20;
+  border-radius: 4px;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.campus-label {
+  font-size: 14px;
+  color: #231F20;
+  margin-bottom: 0.8rem;
+  font-family: Nexa;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.radio-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  mat-radio-button {
+    font-family: Nexa;
+    font-size: 16px;
+    color: #231F20;
+  }
+}

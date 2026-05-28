@@ -43,6 +43,8 @@
               <span class="text-radio">Alumno</span>
             </mat-radio-button>
             <!-- Radiobutton para seleccionar el tipo de usuario: Maestros -->
+
+            <!-- El @if sirve para mostrar el radiobutton solo si el usuario tiene el grupo de 'administrador' o 'maestro', eso quiere decir que solo los administradores y maestros pueden registrar otros maestros -->
             @if (!authService.getUserGroup() || authService.getUserGroup() === 'administrador' ||
             authService.getUserGroup() === 'maestro') {
             <mat-radio-button class="role-pill" value="maestro">
@@ -61,14 +63,15 @@
       @if (isAdmin) {
       <app-registro-admin [rol]="tipo_user" [datos_user]="user"></app-registro-admin>
       }
-
+      <!-- El app-registro-admin es el componente que se creó para el formulario de registro de administradores, el cual se muestra cuando se selecciona el radiobutton de administrador. El [rol] es una propiedad que se le pasa al componente para indicar el tipo de usuario que se está registrando, y el [datos_user] es una propiedad que se le pasa al componente para indicar los datos del usuario que se están editando, en caso de que se esté editando un usuario existente. -->
       @if (isAlumno) {
       <app-registro-alumnos [rol]="tipo_user" [datos_user]="editar ? user : null"></app-registro-alumnos>
       }
-
+      <!-- la operacion ternaria sirve para pasar los datos del usuario solo si se está editando un usuario existente, de lo contrario se pasa null para indicar que se está registrando un nuevo usuario. -->
       @if (isMaestro) {
       <app-registro-maestros [rol]="tipo_user" [datos_user]="editar ? user : null"></app-registro-maestros>
       }
+      
     </div>
   </div>
 </div>

@@ -38,7 +38,9 @@ export class AdministradoresService {
       'telefono': '',
       'rfc': '',
       'edad': '',
-      'ocupacion': ''
+      'ocupacion': '',
+      'categoria': '',
+      'grado_academico': ''
     }
   }
 
@@ -101,6 +103,14 @@ export class AdministradoresService {
       error["ocupacion"] = this.errorService.required;
     }
 
+    if(!this.validatorService.required(data["categoria"])){
+      error["categoria"] = this.errorService.required;
+    }
+
+    if(!this.validatorService.required(data["grado_academico"])){
+      error["grado_academico"] = this.errorService.required;
+    }
+
     //Return arreglo
     return error;
   }
@@ -126,8 +136,13 @@ export class AdministradoresService {
   }
 
   //Creamos la petición DELETE para eliminar un administrador, esta función se llamará en el método eliminarAdmin() dentro del modal eliminar-user-modal.ts
-  public desactivarAdmin(id: number): Observable<any> {
+  public eliminarAdmin(id: number): Observable<any> {
     return this.http.delete<any>(`${environment.url_api}/admin/?id=${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  //Creamos la petición PATCH para cambiar el estatus del usuario a inactivo, esta función se llamará en el método eliminarUser() dentro del modal eliminar-user-modal.ts
+  public desactivarAdmin(id: number): Observable<any> {
+    return this.http.patch<any>(`${environment.url_api}/admin/?id=${id}`, { id }, { headers: this.getAuthHeaders() });
   }
 
 
