@@ -39,10 +39,10 @@ export class MaestrosService {
       'telefono': '',
       'rfc': '',
       'cubiculo': '',
+      'campus': '',
+      'sueldo_estimado': '',
       'area_investigacion': '',
       'materias_json': [],
-      campus: '',
-      sueldo_estimado: '',
     }
 
   }

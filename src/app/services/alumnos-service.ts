@@ -30,20 +30,20 @@ export class AlumnoService {
 
   public esquemaAlumno() {
     return {
-      rol: '',
-      id_alumno: '',
-      first_name: '',
-      last_name: '',
-      email: '',
-      password: '',
-      confirmar_password: '',
-      fecha_nacimiento: '',
-      telefono: '',
-      curp: '',
-      carrera: '',
-      direccion: '',
-      sexo: '',
-      materias_json: []
+      'rol': '',
+      'id_alumno': '',
+      'first_name': '',
+      'last_name': '',
+      'email': '',
+      'password': '',
+      'confirmar_password': '',
+      'fecha_nacimiento': '',
+      'telefono': '',
+      'curp': '',
+      'carrera': '',
+      'direccion': '',
+      'sexo': '',
+      'materias_json': []
     };
   }
 
