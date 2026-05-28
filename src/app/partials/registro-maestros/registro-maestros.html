@@ -98,13 +98,13 @@
 
       <div class="campus-container">
         <div class="campus-label">Campus</div>
-        <div class="radio-group">
+        <mat-radio-group [(ngModel)]="maestro.campus" name="campus">
           @for (camp of campus; track $index) {
-            <mat-radio-button [(ngModel)]="maestro.campus" [value]="camp.value" name="campus">
+            <mat-radio-button [value]="camp.value">
               {{ camp.viewValue }}
             </mat-radio-button>
           }
-        </div>
+        </mat-radio-group>
       </div>
       @if (errors.campus) {
         <div class="invalid-feedback">{{ errors.campus }}</div>
@@ -113,7 +113,7 @@
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Sueldo Estimado</mat-label>
         <span matPrefix [ngClass]="{'currency-prefix': !sueldoFocused, 'currency-prefix-focused': sueldoFocused}">$</span>
-        <input matInput [(ngModel)]="maestro.sueldo_estimado" name="sueldo_estimado" placeholder="Escribe sueldo estimado" mask="0,000,000.00" [dropSpecialCharacters]="false" (focus)="sueldoFocused = true" (blur)="sueldoFocused = false">
+        <input matInput [(ngModel)]="maestro.sueldo_estimado" name="sueldo_estimado" placeholder="Escribe sueldo estimado" type="number" (focus)="sueldoFocused = true" (blur)="sueldoFocused = false">
       </mat-form-field>
       @if (errors.sueldo_estimado) {
         <div class="invalid-feedback">{{ errors.sueldo_estimado }}</div>
