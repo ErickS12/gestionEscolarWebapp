@@ -110,7 +110,7 @@
 
 .search-filter-field {
   width: 100%;
-  max-width: 400px;
+  height: 48px;
   
   ::ng-deep {
     .mat-mdc-form-field {
@@ -128,13 +128,13 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
       &:hover {
-        border-color: #4285f4;
-        box-shadow: 0 2px 8px rgba(66, 133, 244, 0.12);
+        border-color: #e0e4e8;
+        box-shadow: none;
       }
 
       &.mdc-text-field--focused {
-        border-color: #4285f4;
-        box-shadow: 0 4px 16px rgba(66, 133, 244, 0.2);
+        border-color: #e0e4e8;
+        box-shadow: none;
       }
     }
 
@@ -181,6 +181,12 @@
       }
     }
   }
+}
+
+.search-filter-infix-wrapper {
+  height: 60px;
+  display: flex;
+  align-items: center;
 }
 
 //Estilos de la tabla
@@ -448,4 +454,8 @@ table {
     display: inline-block;
     vertical-align: bottom;
   }
+}
+
+.mat-mdc-form-field-flex {
+  width: 60px; /* Ancho fijo para el select del paginador */
 }

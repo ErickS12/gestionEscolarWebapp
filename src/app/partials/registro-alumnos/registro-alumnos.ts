@@ -230,6 +230,7 @@ constructor(
       this.alumno.materias_json.forEach((materia: any, i: any) => {
         if(materia === event.source.value){
           this.alumno.materias_json.splice(i,1)
+          //El splice es un método de los arrays que permite eliminar elementos, en este caso, elimina 1 elemento en la posición i, que es el índice del elemento que queremos eliminar
         }
       });
     }
