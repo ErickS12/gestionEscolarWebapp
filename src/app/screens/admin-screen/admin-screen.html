@@ -31,7 +31,9 @@
                 <th scope="col">Nombre Completo</th>
                 <th scope="col">Email</th>
                 <th scope="col">RFC</th>
-                <th scope="col">Ocupación</th>
+                <!-- <th scope="col">Ocupación</th> -->
+                <th scope="col">Categoría</th>
+                <th scope="col">Grado Académico</th>
                 <th scope="col" class="th-accion">Actualizar</th>
                 <th scope="col" class="th-accion">Eliminar</th>
               </tr>
@@ -43,9 +45,11 @@
                   <td>{{admin.user.first_name}} {{admin.user.last_name}}</td>
                   <td>{{admin.user.email}}</td>
                   <td>{{admin.rfc}}</td>
-                  <td>{{admin.ocupacion}}</td>
+                  <!-- <td>{{admin.ocupacion}}</td> -->
+                  <td>{{admin.categoria}}</td>
+                  <td>{{admin.grado_academico}}</td>
                   <td class="td-editar"><i class="bi bi-pencil-square" (click)="goEditar(admin.id)"></i></td>
-                  <td class="td-eliminar"><i class="bi bi-trash3-fill" (click)="delete(admin.id)"></i></td>
+                  <td class="td-eliminar"><i class="bi bi-trash3-fill" (click)="delete(admin.user.id)"></i></td>
                 </tr>
               }
             </tbody>

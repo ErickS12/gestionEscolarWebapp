@@ -57,7 +57,7 @@ public posgrado: any[] = [
   public sexo: any[] = [
     { value: 'masculino', viewValue: 'Masculino' },
     { value: 'femenino', viewValue: 'Femenino' },
-    { value: 'prefiero_no_decir', viewValue: 'Prefiero no decir' },
+    { value: 'prefiero no decir', viewValue: 'Prefiero no decir' },
   ];
 
   public campus: any[] = [
@@ -177,6 +177,7 @@ constructor(
     // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
     if(this.alumno.password === this.alumno.confirmar_password){
       // TODO: Aquí iría la lógica para registrar al alumno, como llamar a un servicio que se encargue de hacer la petición al backend
+      //El this.alumno se refiere al objeto que contiene los datos del alumno que se van a enviar al backend para registrar un nuevo alumno. Este objeto se llena con los datos que el usuario ingresa en el formulario de registro, y puede tener propiedades como first_name, last_name, email, password, confirmar_password, fecha_nacimiento, telefono, curp, carrera y materias_json, dependiendo de los campos que tenga el formulario. El servicio de alumnos se encargará de tomar este objeto y enviarlo al backend para que se procese el registro del nuevo alumno.
       this.alumnoService.registrarAlumno(this.alumno).subscribe({
         next: (response) => {
           this.notificationService.success("Alumno registrado exitosamente");
@@ -210,7 +211,7 @@ constructor(
         this.notificationService.success("Alumno actualizado exitosamente");
         console.log(response);
         //Si se actualiza correctamente, redirigimos al login
-        this.router.navigate(['/alumno']);
+        this.router.navigate(['/alumnos']);
       },
       error: (error) => {
         console.error("Error al actualizar alumno: ", error);

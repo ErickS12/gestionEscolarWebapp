@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { AuthServices } from '../../services/auth-services';
 import { Router } from '@angular/router';
@@ -27,6 +27,7 @@ export class AdminScreen implements OnInit{
     private administradoresService: AdministradoresService,
     private router: Router,
     private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
   ) {
   }
 
@@ -39,6 +40,7 @@ export class AdminScreen implements OnInit{
     this.administradoresService.obtenerAdmins().subscribe({
       next: (response) => {
         this.lista_admins = response;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.notificationService.error('Error al cargar la lista de administradores. Intente de nuevo más tarde.');
@@ -63,9 +65,12 @@ export class AdminScreen implements OnInit{
 
     // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar al administrador
     const idUserSession = Number(this.authService.getUserId());
-
+    // DEBUG: Ver qué valores se están comparando
+    console.log('Admin ID a eliminar:', id, 'tipo:', typeof id);
+    console.log('User ID en sesión:', idUserSession, 'tipo:', typeof idUserSession);
+    console.log('¿Son iguales?', idUserSession === id);
     // Si el usuario en sesión es el mismo que el administrador que se intenta eliminar, se muestra un mensaje de error
-    if (idUserSession === id) {
+    if (idUserSession === Number(id)) {
       this.notificationService.error('No puedes eliminar tu propia cuenta de administrador.');
       return;
     }

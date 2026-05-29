@@ -29,3 +29,5 @@ export interface DatosAlumno {
   curp: string;
   carrera: number;
 }
+
+

@@ -29,6 +29,13 @@ import {MatDialogModule} from '@angular/material/dialog';
    ========================= */
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
+
+/* =========================
+    Gráficas
+   ========================= */
+// Modulo para las gráficas (ng2-charts ahora exporta directivas standalone)
+import { BaseChartDirective } from 'ng2-charts';
+
 /**
  * SHARED_IMPORTS
  * ---------------------------------------------------------
@@ -62,5 +69,6 @@ export const SHARED_IMPORTS = [
   NgxMaskDirective,
   NgxMaskPipe,
   NgClass,
-   MatDialogModule
+  MatDialogModule,
+  BaseChartDirective,
 ];

@@ -62,7 +62,7 @@ export class AuthServices {
       "username": username,
       "password": password
     };
-
+    //Los headers para indicar que el contenido es json, aunque en este caso no es estrictamente necesario porque HttpClient lo detecta automáticamente, pero es buena práctica incluirlo
     const headers = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
 
     return this.http.post<any>(`${environment.url_api}/login/`, data, headers);

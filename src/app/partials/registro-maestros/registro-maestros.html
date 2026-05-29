@@ -100,7 +100,7 @@
         <div class="campus-label">Campus</div>
         <mat-radio-group [(ngModel)]="maestro.campus" name="campus">
           @for (camp of campus; track $index) {
-            <mat-radio-button [value]="camp.value">
+            <mat-radio-button [value]="camp.viewValue">
               {{ camp.viewValue }}
             </mat-radio-button>
           }

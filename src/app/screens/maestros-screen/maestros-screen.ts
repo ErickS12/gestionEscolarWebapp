@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { MatTableDataSource } from '@angular/material/table';
 import { DatosMaestro } from '../../interfaces/usuarios-interfaces';
@@ -35,8 +35,10 @@ export class MaestrosScreen implements OnInit{
     'fecha_nacimiento',
     'telefono',
     'rfc',
-    'cubiculo',
-    'area_investigacion',
+    //'cubiculo',
+    //'area_investigacion',
+    'campus',
+    'sueldo_estimado',
     'editar',
     'eliminar'
   ];
@@ -52,7 +54,8 @@ export class MaestrosScreen implements OnInit{
     private notificationService: NotificationService,
     private router: Router,
     private dialog: MatDialog,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -147,6 +150,7 @@ export class MaestrosScreen implements OnInit{
         }
 
         this.configureDataSourceProperties();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.notificationService.error('No se pudo obtener la lista de maestros');
@@ -161,6 +165,10 @@ export class MaestrosScreen implements OnInit{
   public delete(idUser: number) {
     // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar al maestro
     const idUserSession = Number(this.authService.getUserId());
+    // DEBUG: Ver qué valores se están comparando
+    console.log('User ID a eliminar:', idUser, 'tipo:', typeof idUser);
+    console.log('User ID en sesión:', idUserSession, 'tipo:', typeof idUserSession);
+    console.log('¿Son iguales?', idUserSession === idUser);
     // --------- Pero el parámetro idUser (el de la función) es el ID del maestro que se quiere eliminar ---------
     // Administrador puede eliminar cualquier maestro
     // Maestro solo puede eliminar su propio registro

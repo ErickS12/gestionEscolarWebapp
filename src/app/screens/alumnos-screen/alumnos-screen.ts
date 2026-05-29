@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -31,8 +31,10 @@ export class AlumnosScreen implements OnInit {
     'email',
     'fecha_nacimiento',
     'telefono',
-    'curp',
-    'carrera',
+    //'curp',
+    //'carrera',
+    'direccion',
+    'sexo',
     'editar',
     'eliminar',
   ];
@@ -49,6 +51,7 @@ export class AlumnosScreen implements OnInit {
     private router: Router,
     private dialog: MatDialog,
     private _liveAnnouncer: LiveAnnouncer,
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -144,6 +147,7 @@ export class AlumnosScreen implements OnInit {
         }
 
         this.configureDataSourceProperties();
+        this.cdr.detectChanges();
       },
       error: () => {
         this.notificationService.error('No se pudo obtener la lista de alumnos');
@@ -159,6 +163,10 @@ export class AlumnosScreen implements OnInit {
   public delete(idUser: number) {
     // Se obtiene el ID del usuario en sesión, es decir, quien intenta eliminar al alumno
     const idUserSession = Number(this.authService.getUserId());
+    // DEBUG: Ver qué valores se están comparando
+    console.log('User ID a eliminar:', idUser, 'tipo:', typeof idUser);
+    console.log('User ID en sesión:', idUserSession, 'tipo:', typeof idUserSession);
+    console.log('¿Son iguales?', idUserSession === idUser);
     // --------- Pero el parámetro idUser (el de la función) es el ID del alumno que se quiere eliminar ---------
     // Administrador puede eliminar cualquier alumno
     // Maestro puede eliminar cualquier alumno

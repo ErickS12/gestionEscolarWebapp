@@ -55,10 +55,14 @@ export class AdministradoresService {
 
     if(!this.validatorService.required(data["first_name"])){
       error["first_name"] = this.errorService.required;
+    } else if (!this.validatorService.wordsES(data["first_name"])) {
+      error["first_name"] = "El nombre solo debe contener letras, sin números ni caracteres especiales.";
     }
 
     if(!this.validatorService.required(data["last_name"])){
       error["last_name"] = this.errorService.required;
+    } else if (!this.validatorService.wordsES(data["last_name"])) {
+      error["last_name"] = "El apellido solo debe contener letras, sin números ni caracteres especiales.";
     }
 
     if(!this.validatorService.required(data["email"])){
@@ -145,5 +149,8 @@ export class AdministradoresService {
     return this.http.patch<any>(`${environment.url_api}/admin/?id=${id}`, { id }, { headers: this.getAuthHeaders() });
   }
 
-
+//Creamos la petición GET para obtener el total de usuarios registrados por cada rol, esta función se llamará en el método obtenerTotalUsers() del componente graficas-screen.ts
+  public getTotalUsuarios(): Observable<any> {
+    return this.http.get<any>(`${environment.url_api}/total-usuarios/`, { headers: this.getAuthHeaders() });
+  }
 }

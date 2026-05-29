@@ -57,10 +57,14 @@ export class MaestrosService {
 
     if(!this.validatorService.required(data["first_name"])){
       error["first_name"] = this.errorService.required;
+    } else if (!this.validatorService.wordsES(data["first_name"])) {
+      error["first_name"] = "El nombre solo debe contener letras, sin números ni caracteres especiales.";
     }
 
     if(!this.validatorService.required(data["last_name"])){
       error["last_name"] = this.errorService.required;
+    } else if (!this.validatorService.wordsES(data["last_name"])) {
+      error["last_name"] = "El apellido solo debe contener letras, sin números ni caracteres especiales.";
     }
 
     if(!this.validatorService.required(data["email"])){

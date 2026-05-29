@@ -202,7 +202,7 @@ public registrar(){
         this.notificationService.success("Maestro actualizado exitosamente");
         console.log(response);
         //Si se actualiza correctamente, redirigimos al login
-        this.router.navigate(['/maestro']);
+        this.router.navigate(['/maestros']);
       },
       error: (error) => {
         console.error("Error al actualizar maestro: ", error);
