@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SHARED_IMPORTS } from '../../shared/shared.imports';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AlumnoService } from '../../services/alumnos-service';
 import { NotificationService } from '../../services/tools/notification-service';
+import { ErrorsService } from '../../services/tools/errors-service';
 
 @Component({
   selector: 'app-registro-alumnos',
@@ -19,7 +21,7 @@ export class RegistroAlumnos implements OnInit {
   @Input() rol:string = "";
   @Input() datos_user:any = {};
 
-  public alumno:any={};
+  public form!: FormGroup;
   public errors:any={};
   public inputType_1: string = 'password'; //inputs para cada entrada
   public inputType_2: string = 'password';
@@ -27,6 +29,7 @@ export class RegistroAlumnos implements OnInit {
   public hide_1: boolean = false;
   public hide_2: boolean = false;
   public editar:boolean = false;
+  public submitted:boolean = false;
   //public posgradoFlag:boolean = false;
 
 public carrera: any[] = [
@@ -70,9 +73,11 @@ public posgrado: any[] = [
 constructor(
     private location: Location,
     private router: Router,
+  private fb: FormBuilder,
     private alumnoService: AlumnoService,
     private notificationService: NotificationService,
-    private activatedRoute: ActivatedRoute
+  private activatedRoute: ActivatedRoute,
+  private errorsService: ErrorsService
   ) { }
 
   ngOnInit(): void {
@@ -82,12 +87,73 @@ constructor(
       //Asignamos a nuestra variable global el valor del ID que viene por la URL
       this.idUser = this.activatedRoute.snapshot.params['id'];
       //Asignamos los datos del usuario que vienen desde la vista principal con el decorador
-      this.alumno = this.datos_user;
+      this.form = this.buildForm(this.datos_user);
     }else{
       // Si no va a editar, entonces inicializamos el JSON para registro nuevo
-    this.alumno = this.alumnoService.esquemaAlumno();
-    this.alumno.rol = this.rol;
+      const alumno = this.alumnoService.esquemaAlumno();
+      alumno.rol = this.rol;
+      this.form = this.buildForm(alumno);
   }  
+  }
+
+  private buildForm(alumno: any): FormGroup {
+    const fechaNacimiento = this.toDateValue(alumno?.fecha_nacimiento);
+
+    // El formulario reactivo controla la UI; la validación de service se mantiene para no cambiar el contrato del backend.
+    return this.fb.group({
+      rol: [alumno?.rol ?? this.rol],
+      id_alumno: [alumno?.id_alumno ?? '', [Validators.required]],
+      first_name: [alumno?.first_name ?? '', [Validators.required]],
+      last_name: [alumno?.last_name ?? '', [Validators.required]],
+      email: [{ value: alumno?.email ?? '', disabled: this.editar }, [Validators.required, Validators.email, Validators.maxLength(40)]],
+      password: [alumno?.password ?? '', this.editar ? [] : [Validators.required]],
+      confirmar_password: [alumno?.confirmar_password ?? '', this.editar ? [] : [Validators.required]],
+      fecha_nacimiento: [fechaNacimiento, [Validators.required]],
+      telefono: [alumno?.telefono ?? '', [Validators.required]],
+      curp: [alumno?.curp ?? '', [Validators.required, Validators.minLength(18), Validators.maxLength(18)]],
+      carrera: [alumno?.carrera ?? '', [Validators.required]],
+      direccion: [alumno?.direccion ?? '', [Validators.required]],
+      sexo: [alumno?.sexo ?? '', [Validators.required]],
+      materias_json: [Array.isArray(alumno?.materias_json) ? alumno.materias_json : [], [Validators.required]],
+    });
+  }
+
+  private toDateValue(value: unknown): string | Date {
+    if (value instanceof Date) {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      const normalized = value.trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
+        return new Date(`${normalized}T00:00:00`);
+      }
+      return normalized;
+    }
+
+    return '';
+  }
+
+  private normalizeFechaNacimiento(value: unknown): string {
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+      return value.toISOString().split('T')[0];
+    }
+
+    if (typeof value === 'string') {
+      const rawFecha = value.trim();
+      const parts = rawFecha.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+
+      if (parts) {
+        const day = parts[1].padStart(2, '0');
+        const month = parts[2].padStart(2, '0');
+        const year = parts[3];
+        return `${year}-${month}-${day}`;
+      }
+
+      return rawFecha;
+    }
+
+    return '';
   }
 
 
@@ -118,8 +184,10 @@ constructor(
   }
 
   public revisarSeleccion(nombre: string){
-    if(this.alumno.materias_json){
-      const busqueda = this.alumno.materias_json.find((element: string)=>element===nombre);
+    const materias = this.form.get('materias_json')?.value ?? [];
+
+    if(Array.isArray(materias)){
+      const busqueda = materias.find((element: string)=>element===nombre);
       if(busqueda !== undefined){
         return true;
       }else{
@@ -132,7 +200,7 @@ constructor(
 
   //Función para detectar el cambio de fecha
   public changeFecha(event :any){
-    this.alumno.fecha_nacimiento = event.value.toISOString().split("T")[0];
+    this.form.patchValue({ fecha_nacimiento: event.value });
   }
 
 
@@ -140,45 +208,50 @@ constructor(
     this.location.back();
   }
 
-  private normalizeFechaNacimiento(): void {
-    const rawFecha = this.alumno?.fecha_nacimiento;
+  public getValue(controlName: string): any {
+    return this.form.get(controlName)?.value;
+  }
 
-    if (typeof rawFecha !== 'string') {
-      return;
+  public getError(controlName: string): string | null {
+    const control = this.form.get(controlName);
+
+    if (control && (control.touched || control.dirty || this.submitted)) {
+      if (control.hasError('required')) return this.errorsService.required;
+      if (control.hasError('email')) return this.errorsService.email;
+      if (control.hasError('maxlength')) return this.errorsService.max;
+      if (control.hasError('minlength')) return this.errorsService.min;
+      if (control.hasError('min')) return this.errorsService.numeric;
+      if (control.hasError('pattern')) return this.errorsService.pattern;
     }
 
-    const fecha = rawFecha.trim();
-    const parts = fecha.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-
-    if (!parts) {
-      return;
-    }
-
-    const day = parts[1].padStart(2, '0');
-    const month = parts[2].padStart(2, '0');
-    const year = parts[3];
-    this.alumno.fecha_nacimiento = `${year}-${month}-${day}`;
+    return this.errors[controlName] ?? null;
   }
 
   public registrar(){
-    //Inicializo el objeto de errores para evitar que se muestren errores anteriores o datos anteriores al momento de registrar un nuevo alumno
+    // Inicializo la validación reactiva y luego mantengo la validación de service para no cambiar el backend.
+    this.submitted = true;
     this.errors = {};
-    console.log("Datos del alumno: ", this.alumno);
+    this.form.markAllAsTouched();
 
-    this.normalizeFechaNacimiento();
+    if (this.form.invalid) {
+      return;
+    }
+
+    const payload = { ...this.form.getRawValue(), fecha_nacimiento: this.normalizeFechaNacimiento(this.form.getRawValue().fecha_nacimiento) };
+    console.log("Datos del alumno: ", payload);
 
     // Validar datos y mostrar errores
-    this.errors = this.alumnoService.validarAlumno(this.alumno, this.editar);
+    this.errors = this.alumnoService.validarAlumno(payload, this.editar);
     //Verificamos si el objeto de errores está vacío, lo que indica que no hay errores de validación
     if(Object.keys(this.errors).length > 0){
       return;
     }
 
     // Validar si las contraseñas coinciden solo si no se está editando, ya que en la edición no es obligatorio cambiar la contraseña
-    if(this.alumno.password === this.alumno.confirmar_password){
+    if(payload.password === payload.confirmar_password){
       // TODO: Aquí iría la lógica para registrar al alumno, como llamar a un servicio que se encargue de hacer la petición al backend
       //El this.alumno se refiere al objeto que contiene los datos del alumno que se van a enviar al backend para registrar un nuevo alumno. Este objeto se llena con los datos que el usuario ingresa en el formulario de registro, y puede tener propiedades como first_name, last_name, email, password, confirmar_password, fecha_nacimiento, telefono, curp, carrera y materias_json, dependiendo de los campos que tenga el formulario. El servicio de alumnos se encargará de tomar este objeto y enviarlo al backend para que se procese el registro del nuevo alumno.
-      this.alumnoService.registrarAlumno(this.alumno).subscribe({
+      this.alumnoService.registrarAlumno(payload).subscribe({
         next: (response) => {
           this.notificationService.success("Alumno registrado exitosamente");
           console.log(response);
@@ -192,21 +265,28 @@ constructor(
       });
     }else{
       this.notificationService.error("Las contraseñas no coinciden");
-      this.alumno.password="";
-      this.alumno.confirmar_password="";
+      this.form.patchValue({ password: '', confirmar_password: '' });
     }
 
   }
 
   public actualizar(){
     // Validación de los datos
+    this.submitted = true;
     this.errors = {};
-    this.errors = this.alumnoService.validarAlumno(this.alumno, this.editar);
+    this.form.markAllAsTouched();
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    const payload = { ...this.form.getRawValue(), fecha_nacimiento: this.normalizeFechaNacimiento(this.form.getRawValue().fecha_nacimiento) };
+    this.errors = this.alumnoService.validarAlumno(payload, this.editar);
     if(Object.keys(this.errors).length > 0){
       return;
     }
     // Llamamos a la función para actualizar al alumno, esta función se encuentra en el servicio de alumnos
-    this.alumnoService.actualizarAlumno(this.alumno).subscribe({
+    this.alumnoService.actualizarAlumno(payload).subscribe({
       next: (response) => {
         this.notificationService.success("Alumno actualizado exitosamente");
         console.log(response);
@@ -225,16 +305,20 @@ constructor(
 
 
   public checkboxChange(event:any){
+    const materias = Array.isArray(this.form.get('materias_json')?.value) ? [...this.form.get('materias_json')?.value] : [];
+
     if(event.checked){
-      this.alumno.materias_json.push(event.source.value)
+      if (!materias.includes(event.source.value)) {
+        materias.push(event.source.value);
+      }
     }else{
-      this.alumno.materias_json.forEach((materia: any, i: any) => {
-        if(materia === event.source.value){
-          this.alumno.materias_json.splice(i,1)
-          //El splice es un método de los arrays que permite eliminar elementos, en este caso, elimina 1 elemento en la posición i, que es el índice del elemento que queremos eliminar
-        }
-      });
+      const index = materias.indexOf(event.source.value);
+      if (index >= 0) {
+        materias.splice(index, 1);
+      }
     }
+
+    this.form.patchValue({ materias_json: materias });
   }
 
   // Función para los campos solo de datos alfabeticos

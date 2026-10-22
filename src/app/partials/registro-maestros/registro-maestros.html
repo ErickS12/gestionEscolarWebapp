@@ -1,7 +1,7 @@
 <!-- Formulario de registro para maestros -->
 <div class="wrapper">
   <div class="section-registro">
-    <form class="body-registro" (ngSubmit)="!editar ? registrar() : actualizar()" novalidate>
+    <form class="body-registro" [formGroup]="form" (ngSubmit)="!editar ? registrar() : actualizar()" novalidate>
       <div class="row mt-3 mb-3">
         <div class="form-group col-12">
           <label class="title-user" for="tipo_usuario">Ingresa los datos del maestro</label>
@@ -10,95 +10,95 @@
       <!-- Aquí empiezan los campos del formulario -->
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>ID de trabajador</mat-label>
-        <input matInput [(ngModel)]="maestro.id_trabajador" name="id_trabajador" placeholder="Escribe ID de trabajador">
+        <input matInput formControlName="id_trabajador" placeholder="Escribe ID de trabajador">
       </mat-form-field>
-      @if (errors.id_trabajador) {
-        <div class="invalid-feedback">{{ errors.id_trabajador }}</div>
+      @if (getError('id_trabajador')) {
+        <div class="invalid-feedback">{{ getError('id_trabajador') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Nombre</mat-label>
-        <input matInput [(ngModel)]="maestro.first_name" name="first_name" placeholder="Escribe nombre del maestro">
+        <input matInput formControlName="first_name" placeholder="Escribe nombre del maestro">
       </mat-form-field>
-      @if (errors.first_name) {
-        <div class="invalid-feedback">{{ errors.first_name }}</div>
+      @if (getError('first_name')) {
+        <div class="invalid-feedback">{{ getError('first_name') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Apellidos</mat-label>
-        <input matInput [(ngModel)]="maestro.last_name" name="last_name" placeholder="Escribe apellidos del maestro">
+        <input matInput formControlName="last_name" placeholder="Escribe apellidos del maestro">
       </mat-form-field>
-      @if (errors.last_name) {
-        <div class="invalid-feedback">{{ errors.last_name }}</div>
+      @if (getError('last_name')) {
+        <div class="invalid-feedback">{{ getError('last_name') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Correo electrónico</mat-label>
-        <input matInput [(ngModel)]="maestro.email" name="email" placeholder="Escribe correo electrónico" [disabled]="editar">
+        <input matInput formControlName="email" placeholder="Escribe correo electrónico">
       </mat-form-field>
-      @if (errors.email) {
-        <div class="invalid-feedback">{{ errors.email }}</div>
+      @if (getError('email')) {
+        <div class="invalid-feedback">{{ getError('email') }}</div>
       }
       @if (!editar) {
         <mat-form-field class="mat-input" appearance="outline">
           <mat-label>Contraseña</mat-label>
-          <input matInput [(ngModel)]="maestro.password" name="password" [type]="inputType_1" placeholder="Escribe contraseña del maestro">
+          <input matInput formControlName="password" [type]="inputType_1" placeholder="Escribe contraseña del maestro">
           <mat-icon matSuffix class="eye-icon" (click)="showPassword()">{{hide_1 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </mat-form-field>
-        @if (errors.password) {
-          <div class="invalid-feedback">{{ errors.password }}</div>
+        @if (getError('password')) {
+          <div class="invalid-feedback">{{ getError('password') }}</div>
         }
   
         <mat-form-field class="mat-input" appearance="outline">
           <mat-label>Confirmar contraseña</mat-label>
-          <input matInput [(ngModel)]="maestro.confirmar_password" name="confirmar_password" [type]="inputType_2" placeholder="Confirma contraseña del maestro">
+          <input matInput formControlName="confirmar_password" [type]="inputType_2" placeholder="Confirma contraseña del maestro">
           <mat-icon matSuffix class="eye-icon" (click)="showPwdConfirmar()">{{hide_2 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </mat-form-field>
-        @if (errors.confirmar_password) {
-          <div class="invalid-feedback">{{ errors.confirmar_password }}</div>
+        @if (getError('confirmar_password')) {
+          <div class="invalid-feedback">{{ getError('confirmar_password') }}</div>
         }
       }
 
       <!-- Campo para la fecha de nacimiento del maestro -->
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Fecha de nacimiento</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="maestro.fecha_nacimiento" name="fecha_nacimiento" (focus)="picker.open()" placeholder="Elegir fecha de nacimiento" (dateChange)="changeFecha($event)" type="text">
+        <input matInput [matDatepicker]="picker" formControlName="fecha_nacimiento" (focus)="picker.open()" placeholder="Elegir fecha de nacimiento" (dateChange)="changeFecha($event)" type="text">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
-      @if (errors.fecha_nacimiento) {
-        <div class="invalid-feedback">{{ errors.fecha_nacimiento }}</div>
+      @if (getError('fecha_nacimiento')) {
+        <div class="invalid-feedback">{{ getError('fecha_nacimiento') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Teléfono</mat-label>
-        <input matInput [(ngModel)]="maestro.telefono" mask="000-000-0000" [dropSpecialCharacters]="true" name="telefono" placeholder="Escribe teléfono del maestro">
+        <input matInput formControlName="telefono" mask="000-000-0000" [dropSpecialCharacters]="true" placeholder="Escribe teléfono del maestro">
       </mat-form-field>
-      @if (errors.telefono) {
-        <div class="invalid-feedback">{{ errors.telefono }}</div>
+      @if (getError('telefono')) {
+        <div class="invalid-feedback">{{ getError('telefono') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>RFC</mat-label>
-        <input matInput minlength="12" maxlength="13" [(ngModel)]="maestro.rfc" name="rfc" placeholder="Escribe RFC del maestro">
-        <mat-hint align="end">{{maestro.rfc?.length || 0}}/13</mat-hint>
+        <input matInput minlength="12" maxlength="13" formControlName="rfc" placeholder="Escribe RFC del maestro">
+        <mat-hint align="end">{{getValue('rfc')?.length || 0}}/13</mat-hint>
       </mat-form-field>
-      @if (errors.rfc) {
-        <div class="invalid-feedback">{{ errors.rfc }}</div>
+      @if (getError('rfc')) {
+        <div class="invalid-feedback">{{ getError('rfc') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Cubículo</mat-label>
-        <input matInput [(ngModel)]="maestro.cubiculo" name="cubiculo" placeholder="Escribe cubículo del maestro">
+        <input matInput formControlName="cubiculo" placeholder="Escribe cubículo del maestro">
       </mat-form-field>
-      @if (errors.cubiculo) {
-        <div class="invalid-feedback">{{ errors.cubiculo }}</div>
+      @if (getError('cubiculo')) {
+        <div class="invalid-feedback">{{ getError('cubiculo') }}</div>
       }
 
 
       <div class="campus-container">
         <div class="campus-label">Campus</div>
-        <mat-radio-group [(ngModel)]="maestro.campus" name="campus">
+        <mat-radio-group formControlName="campus">
           @for (camp of campus; track $index) {
             <mat-radio-button [value]="camp.viewValue">
               {{ camp.viewValue }}
@@ -106,22 +106,22 @@
           }
         </mat-radio-group>
       </div>
-      @if (errors.campus) {
-        <div class="invalid-feedback">{{ errors.campus }}</div>
+      @if (getError('campus')) {
+        <div class="invalid-feedback">{{ getError('campus') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Sueldo Estimado</mat-label>
         <span matPrefix [ngClass]="{'currency-prefix': !sueldoFocused, 'currency-prefix-focused': sueldoFocused}">$</span>
-        <input matInput [(ngModel)]="maestro.sueldo_estimado" name="sueldo_estimado" placeholder="Escribe sueldo estimado" type="number" (focus)="sueldoFocused = true" (blur)="sueldoFocused = false">
+        <input matInput formControlName="sueldo_estimado" placeholder="Escribe sueldo estimado" type="number" (focus)="sueldoFocused = true" (blur)="sueldoFocused = false">
       </mat-form-field>
-      @if (errors.sueldo_estimado) {
-        <div class="invalid-feedback">{{ errors.sueldo_estimado }}</div>
+      @if (getError('sueldo_estimado')) {
+        <div class="invalid-feedback">{{ getError('sueldo_estimado') }}</div>
       }
 
       <mat-form-field class="mat-input" appearance="outline">
         <mat-label>Área de investigación</mat-label>
-        <mat-select [(ngModel)]="maestro.area_investigacion" panelClass="custom-select-panel" name="area_investigacion" placeholder="Selecciona el área de investigación">
+        <mat-select formControlName="area_investigacion" panelClass="custom-select-panel" placeholder="Selecciona el área de investigación">
           @for (area of areas; track $index) {
             <mat-option [value]="area.viewValue">
               {{area.viewValue}}
@@ -129,8 +129,8 @@
           }
         </mat-select>
       </mat-form-field>
-      @if (errors.area_investigacion) {
-        <div class="invalid-feedback">{{ errors.area_investigacion }}</div>
+      @if (getError('area_investigacion')) {
+        <div class="invalid-feedback">{{ getError('area_investigacion') }}</div>
       }
 
       <!-- Sección de los checkbox para seleccionar las materias que imparte el maestro -->
@@ -142,13 +142,13 @@
         </div>
         <div class="checkbox-group">
           @for (materia of materias; track $index) {
-            <mat-checkbox class="checkbox-item opc-sc" name="opsc" (change)="checkboxChange($event)" value="{{materia.nombre}}" [checked]="revisarSeleccion(materia.nombre)">
+            <mat-checkbox class="checkbox-item opc-sc" (change)="checkboxChange($event)" value="{{materia.nombre}}" [checked]="revisarSeleccion(materia.nombre)">
               <div class="d-checkbox-nombre">{{materia.nombre}}</div>
           </mat-checkbox>
           }
         </div>
-          @if (errors.materias_json) {
-            <div class="invalid-feedback">{{ errors.materias_json }}</div>
+          @if (getError('materias_json')) {
+            <div class="invalid-feedback">{{ getError('materias_json') }}</div>
         }
       </div>
       <!-- En esta clase se definen los botones para guardar o actualizar el registro -->
